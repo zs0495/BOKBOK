@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- ✅ 네비게이션 -->
+    <!-- 네비게이션 -->
     <nav class="navbar">
       <div class="logo">bokbok</div>
       <div class="menu">
@@ -16,23 +16,35 @@
         <a href="#">고객센터</a>
       </div>
       <div class="auth">
-        <a href="#">회원가입</a> | <a href="#">로그인</a>
+        <a href="#">회원가입</a> | <a href="#" id="loginBtn">로그인</a>
       </div>
     </nav>
 
-    <!-- ✅ 히어로 섹션 -->
+    <!-- 히어로 섹션 -->
     <section class="hero">
       <h2>나도 몰랐던 나를 위한 정책</h2>
       <h1><strong>복복이</strong>가 다 찾아드릴게요!</h1>
       <img src="bokbok.png" alt="복복이 캐릭터" class="hero-img" />
       <div class="icons">
-        <span>🔍</span>
-        <span>👓</span>
-        <span>📚</span>
       </div>
     </section>
 
-    <!-- ✅ 검색창 -->
+    <!-- 로그인 모달 -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-box">
+            <h2>로그인</h2>
+            <input type="text" placeholder="아이디를 입력해주세요" />
+            <input type="password" placeholder="비밀번호를 입력해주세요" />
+            <button class="login-btn">로그인</button>
+            <div class="login-links">
+                <a href="#">회원가입</a> | <a href="#">아이디·비밀번호 찾기</a>
+            </div>
+            <hr />
+            <button class="kakao">카카오로 시작하기</button>
+        </div>
+    </div>
+  
+    <!-- 검색창 -->
     <section class="search-section">
       <div class="search-box">
         <input type="text" placeholder="검색어를 입력하세요" />
@@ -40,7 +52,7 @@
       </div>
     </section>
 
-    <!-- ✅ 주요 기능 카드 -->
+    <!-- 주요 기능 카드 -->
     <section class="feature-section">
       <div class="card-container">
         <div class="card"></div>
@@ -53,7 +65,7 @@
       </p>
     </section>
 
-    <!-- ✅ FAQ 섹션 -->
+    <!-- FAQ 섹션 -->
     <section class="faq-section">
       <h2>이용가이드와 자주하는 질문들을 모아봤어요</h2>
       <div class="faq-container">
@@ -64,9 +76,11 @@
       </div>
     </section>
 
-    <!-- ✅ 푸터 -->
+    <!-- 푸터 -->
     <footer class="footer">
       © 2025 bokbok. All rights reserved.
     </footer>
+
+    <script src="script.js"></script>
   </body>
 </html>
