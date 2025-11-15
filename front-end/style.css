@@ -34,37 +34,125 @@
     font-size: 0.9rem;
 }
 
-/* 히어로 섹션 */
-.hero {
-    text-align: center;
-    padding: 80px 16px 40px;
-    background-color: #fafafa;
+/* ★ 슬라이더 바깥 여백 (Wireframe과 동일) */
+.hero-wrapper {
+  width: 100%;
+  background: #ffffff;
+  padding: 60px 40px;   /* 바깥 여백 생성 */
 }
 
-.hero h2 {
-    color: #777;
-    font-size: 1.1rem;
-    margin-bottom: 8px;
+/* 실제 슬라이더 */
+.hero-slider {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;  /* 중앙 정렬 */
+  margin: 0 auto;
+  overflow: hidden;
 }
 
-.hero h1 {
-    font-size: 1.8rem;
-    color: #222;
-    margin-bottom: 32px;
+/* 전체 슬라이드 래퍼 */
+.slider-container {
+  display: flex;
+  width: 300%;
+  transition: transform 0.6s ease;
 }
 
-.hero-img {
-    width: 40%;
-    max-width: 320px;
-    height: auto;
-    margin-bottom: 20px;
+/* 슬라이드: 오직 100%만 차지 (padding 절대 금지) */
+.slide {
+  min-width: 100%;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+}
+
+/* 내부 박스만 패딩 */
+.slide-inner {
+  padding: 60px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
 }
 
 
-.icons span {
-    font-size: 1.5rem;
-    margin: 0 6px;
-    color: #999;
+/* 각 슬라이드 배경 */
+.slide-1 { background: #fffbe5; }
+.slide-2 { background: #e5f0ff; }
+.slide-3 { background: #f0ffd9; }
+
+
+/* 이미지 */
+.slide-img {
+  width: 240px;
+  margin: 20px auto;
+}
+
+/* 설명 텍스트 */
+.slide-desc {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+
+/* 페이지 번호 */
+.slide-bottom-left {
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.slide-bottom-left .line {
+  width: 40px;
+  height: 2px;
+  background: #111;
+  margin: 0 10px;
+}
+
+/* 버튼 */
+.slide-btn {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  padding: 10px 24px;
+  background: #111;
+  color: white;
+  border-radius: 20px;
+}
+
+/* 좌우 버튼 & 인디케이터 */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  padding: 12px 16px;
+  font-size: 2rem;
+  border-radius: 50%;
+}
+
+.prev { left: 20px; }
+.next { right: 20px; }
+
+.indicator {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 6px;
+  background: #ccc;
+  border-radius: 50%;
+}
+
+.dot.active {
+  background: #555;
 }
 
 /* 검색창 */
