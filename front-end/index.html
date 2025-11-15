@@ -11,10 +11,32 @@
   <!-- 네비게이션 -->
   <nav class="navbar">
     <div class="logo">bokbok</div>
+    <!-- ### 드롭다운 설정 -->
     <div class="menu">
-      <a href="#">서비스 소개</a>
-      <a href="#">주요 기능</a>
-      <a href="#">고객센터</a>
+      <ul>
+        <li>
+          <a href="#">서비스 소개</a>
+          <ul>
+            <li><a href="">서비스 개요</a></li>
+            <li><a href="">팀 소개</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="">주요 기능</a>
+          <ul>
+            <li><a href="">공공 복지 검색</a></li>
+            <li><a href="">민간 복지 검색</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="">라운지</a>
+          <ul>
+            <li><a href="">자료실</a></li>
+            <li><a href="">이용 가이드</a></li>
+            <li><a href="">FAQ</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
     <div class="auth">
       <a href="#">회원가입</a> | <a href="#" id="loginBtn">로그인</a>
@@ -113,6 +135,28 @@
       <hr />
       <button class="kakao">카카오로 시작하기</button>
     </div>
+  </div>
+
+  <!-- ### 바로가기 -->
+  <div class="icon">
+    <a href="#" class="icon-btn">
+      <div class="icon-box">
+        <img src="../images/icon_heart.png" alt="">
+      </div>
+      <span>찜한 복지</span>
+    </a>
+    <a href="#" class="icon-btn">
+      <div class="icon-box">
+        <img src="../images/icon_file.png" alt="">
+      </div>
+      <span>필수 서류</span>
+    </a>
+    <a href="#" class="icon-btn">
+      <div class="icon-box">
+        <img src="../images/icon_file.png" alt="">
+      </div>
+      <span>FAQ</span>
+    </a>
   </div>
 
   <!-- 검색창 -->

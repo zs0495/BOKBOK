@@ -13,6 +13,8 @@
     padding: 16px 48px;
     background-color: white;
     border-bottom: 1px solid #eee;
+    position: relative;
+    z-index: 20;
 }
 
 .logo {
@@ -21,11 +23,63 @@
     color: #333;
 }
 
-.menu a {
-    margin: 0 16px;
-    text-decoration: none;
-    color: #555;
-    font-size: 0.95rem;
+/* ### 네비게이션 메뉴바 추가 */
+.menu {
+  font: bold 16px "malgun gothic";
+}
+
+.menu > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex; 
+  gap: 40px;
+}
+
+.menu > ul > li {
+  position: relative;
+}
+
+.menu > ul > li > a {
+  text-decoration: none;
+  color: #333;
+  padding: 16px 0;
+  display: inline-block;
+}
+
+.menu > ul > li > ul {
+  position: absolute;
+  top: 100%; 
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: none; 
+
+  margin: 0;
+  padding: 24px 32px 72px;
+  list-style: none;
+
+  min-width: 160px;
+  min-height: 200px;
+  background: #f5f9ff;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  font-size: 14px;
+}
+
+.menu > ul > li > ul > li {
+  padding: 6px 0;
+}
+
+.menu > ul > li > ul > li > a {
+  text-decoration: none;
+  color: #222;
+  white-space: nowrap; 
+}
+
+.menu > ul > li:hover > ul {
+  display: block;
 }
 
 .auth a {
