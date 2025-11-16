@@ -88,95 +88,67 @@
     font-size: 0.9rem;
 }
 
-/* ★ 슬라이더 바깥 여백 (Wireframe과 동일) */
+/* -------------------
+ * Hero 슬라이더 스타일 (배경 이미지 기반으로 대폭 수정)
+ * ------------------- */
+
+/* 실제 슬라이더: hero-wrapper와 hero-slider 스타일은 유지 */
 .hero-wrapper {
   width: 100%;
   background: #ffffff;
-  padding: 60px 40px;   /* 바깥 여백 생성 */
+  padding: 60px 40px;
 }
 
-/* 실제 슬라이더 */
 .hero-slider {
   position: relative;
   width: 100%;
-  max-width: 1200px;  /* 중앙 정렬 */
+  max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
 }
 
-/* 전체 슬라이드 래퍼 */
-.slider-container {
-  display: flex;
-  width: 300%;
-  transition: transform 0.6s ease;
-}
-
-/* 슬라이드: 오직 100%만 차지 (padding 절대 금지) */
+/* 슬라이드: 오직 100%만 차지 */
 .slide {
   min-width: 100%;
   width: 100%;
   display: block;
   overflow: hidden;
+  /* background-color 설정은 이제 이미지로 대체됩니다. */
 }
 
-/* 내부 박스만 패딩 */
-.slide-inner {
-  padding: 60px 20px;
-  max-width: 1100px;
-  margin: 0 auto;
+/* ★ 슬라이드 내용 컨테이너 (높이와 배경 설정의 핵심) */
+.slide-content {
   position: relative;
+  width: 100%;
+  /* 와이어프레임과 비슷한 비율을 유지하기 위해 높이 지정 */
+  height: 480px; 
+  max-width: 1000px; /* 내부 둥근 박스 너비 */
+  margin: 0 auto;
+  border-radius: 24px; /* 둥근 박스 모양 유지 */
+  
+  /* 슬라이드 내용이 전부 배경 이미지로 처리되므로, 내부 요소는 제거 */
+  background-size: cover; /* 이미지가 컨테이너를 가득 채우도록 */
+  background-position: center; /* 이미지를 중앙에 배치 */
+  background-repeat: no-repeat;
+}
+
+/* ★ 1번 슬라이드: banner_1.png 설정 */
+.slide-1 .slide-content { 
+    background-image: url('images/banner_1.png'); /* 이미지 경로 확인 */
+}
+
+/* ★ 2번 슬라이드: banner_2.png 설정 */
+.slide-2 .slide-content { 
+    background-image: url('images/banner_2.png');
+}
+
+/* ★ 3번 슬라이드: banner_3.png 설정 */
+.slide-3 .slide-content { 
+    background-image: url('images/banner_3.png');
 }
 
 
-/* 각 슬라이드 배경 */
-.slide-1 { background: #fffbe5; }
-.slide-2 { background: #e5f0ff; }
-.slide-3 { background: #f0ffd9; }
-
-
-/* 이미지 */
-.slide-img {
-  width: 240px;
-  margin: 20px auto;
-}
-
-/* 설명 텍스트 */
-.slide-desc {
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 30px;
-  line-height: 1.7;
-}
-
-/* 페이지 번호 */
-.slide-bottom-left {
-  position: absolute;
-  left: 40px;
-  bottom: 40px;
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-}
-
-.slide-bottom-left .line {
-  width: 40px;
-  height: 2px;
-  background: #111;
-  margin: 0 10px;
-}
-
-/* 버튼 */
-.slide-btn {
-  position: absolute;
-  right: 40px;
-  bottom: 40px;
-  padding: 10px 24px;
-  background: #111;
-  color: white;
-  border-radius: 20px;
-}
-
-/* 좌우 버튼 & 인디케이터 */
+/* 좌우 버튼 위치 조정 (슬라이더 박스 밖으로) */
 .slider-btn {
   position: absolute;
   top: 50%;
@@ -186,11 +158,14 @@
   padding: 12px 16px;
   font-size: 2rem;
   border-radius: 50%;
+  cursor: pointer;
+  z-index: 10; 
 }
 
 .prev { left: 20px; }
 .next { right: 20px; }
 
+/* ★ 하단 인디케이터 스타일 (추가) */
 .indicator {
   margin-top: 14px;
   text-align: center;
@@ -203,11 +178,13 @@
   margin: 0 6px;
   background: #ccc;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 .dot.active {
   background: #555;
 }
+
 
 /* ### 바로가기 아이콘 */
 .icon {
