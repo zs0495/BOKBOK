@@ -127,10 +127,14 @@
   font-weight: 700;
 }
 
+.service-mascot-wrap {
+  max-width: 900px;
+  margin: -200px auto 5px;
+  padding: 0 24px;
+  text-align: right;
+}
+
 .service-mascot {
-  position: absolute;
-  right: 80px;
-  bottom: 40px;
   width: 140px;
 }
 
