@@ -279,6 +279,87 @@
   width: 140px;
 }
 
+/* ### 자료실 페이지 추가 */
+.library-header {
+  background: #f5f9ff; 
+  border: 1px solid #ddd;
+  padding: 70px 0;      
+  text-align: center;
+  border-left: 0;          
+  border-right: 0;
+}
+
+.library-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.library-layout {
+  max-width: 1100px;
+  margin: 0 auto 80px;
+  display: flex;
+  border-left: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* 왼쪽 사이드 */
+.library-side {
+  width: 250px;
+  padding: 40px 24px;
+  border-right: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: #999;
+  line-height: 1.8;
+}
+
+/* 공공, 민간 필터 버튼 */
+.library-filter {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 10px 8px;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+}
+
+/* 선택된 상태 */
+.library-filter.active {
+  color: #222;
+  background: #ffffff;
+}
+
+/* 복지 정보 테이블 */
+.library-content {
+  flex: 1;
+  padding: 40px 32px;
+}
+
+.library-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.library-table th,
+.library-table td {
+  padding: 14px 8px;
+  font-size: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+.library-table th {
+  font-weight: 600;
+  color: #555;
+}
+
+.library-table td {
+  color: #333;
+}
+
 /* -------------------
  * Hero 슬라이더
  * ------------------- */
