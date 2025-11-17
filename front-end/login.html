@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>로그인 | bokbok</title>
     <link rel="stylesheet" href="style.css" /> 
     
@@ -85,6 +86,17 @@
     }
     /* 나머지 내부 요소 스타일은 그대로 유지 */
 
+    .login-logo {
+    position: fixed;  /* 스크롤해도 유지됨 */
+    top: 50px;        /* 화면 상단에서 40px 아래 */
+    left: 50%;
+    transform: translateX(-50%); /* 정확한 가로 중앙 정렬 */
+    width: 160px;     /* 로고 크기 */
+    height: auto;
+    z-index: 200; 
+}
+
+
 </style>
 </head>
 <body>
@@ -93,6 +105,8 @@
 
     <div class="login-page-container">
         
+        <img src="../images/bokbok_typo.png" alt="bokbok 로고" class="login-logo" />
+
         <h2>로그인</h2>
         <input type="text" placeholder="아이디를 입력해주세요" />
         <input type="password" placeholder="비밀번호를 입력해주세요" />

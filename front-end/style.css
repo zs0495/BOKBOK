@@ -5,6 +5,12 @@
     font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }
 
+/* 타이포 로고 */
+.logo img {
+  width: 120px; /* 원하는 크기 */
+  height: auto;
+}
+
 /* 네비게이션 */
 .navbar {
     display: flex;
@@ -15,12 +21,6 @@
     border-bottom: 1px solid #eee;
     position: relative;
     z-index: 20;
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
 }
 
 /* ### 네비게이션 메뉴바 추가 */
