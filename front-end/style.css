@@ -140,7 +140,7 @@
 
 /* ### 팀소개 페이지 추가 */
 .team-header {
- background: #f5f9ff; 
+  background: #f5f9ff; 
   border: 1px solid #ddd;
   padding: 70px 0;      
   text-align: center;
@@ -181,11 +181,16 @@
 }
 
 .member-avatar {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: #dcdcdc;
+  width: 150px;
+  height: 150px;
   margin: 0 auto 20px;
+}
+
+.member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .member-name {
@@ -358,6 +363,21 @@
 
 .library-table td {
   color: #333;
+}
+
+.mypage-header {
+  background: #f5f9ff; 
+  border: 1px solid #ddd;
+  padding: 70px 0;      
+  text-align: center;
+  border-left: 0;          
+  border-right: 0;
+}
+
+.mypage-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
 }
 
 /* -------------------
