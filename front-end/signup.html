@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>로그인 | bokbok</title>
-    <link rel="stylesheet" href="style.css" /> 
-    
+    <title>회원가입 | bokbok</title>
     <style>
     
     /* 1. 전체 화면 배경 및 중앙 정렬 */
@@ -20,7 +18,7 @@
         padding: 0 20px;
     }
     
-    /* 2. 회원가입 컨테이너: 박스 스타일 제거 (핵심 수정) */
+    /* 2. 회원가입 컨테이너 */
     .signup-page-container {
         position: relative;
         width: 100%;
@@ -30,19 +28,7 @@
         margin: 40px 0;
     }
 
-    /* 3. 뒤로 가기 버튼 (와이어프레임 기준) */
-    .back-btn {
-        position: absolute;
-        top: 25px;
-        left: 0; /* 좌측 끝에 붙도록 조정 */
-        background: none;
-        border: none;
-        font-size: 36px;
-        color: #333;
-        cursor: pointer;
-        text-decoration: none;
-        font-weight: 600;
-    }
+    /* 3. 뒤로 가기 버튼 및 로고 */
     .fixed-top-left {
         position: fixed; /* 뷰포트 기준으로 위치 고정 */
         top: 25px;       /* 상단에서 25px */
@@ -51,28 +37,28 @@
     }
 
     .back-btn {
-        /* 위치 스타일은 .fixed-top-left가 담당하므로 여기서는 제거 */
         background: none;
         border: none;
-        font-size: px;
+        font-size: 36px;
         color: #333;
         cursor: pointer;
         text-decoration: none;
         font-weight: 600;
+        /* font-size: px; 오타 수정 */
+        line-height: 1;
     }
 
-    /* 4. SNS 로그인 텍스트 스타일 */
-    .sns-login-text {
-        font-size: 13px;
-        color: #777;
-        position: relative;
-        top: -15px; 
-        background: none; /* 배경색 제거 */
-        display: inline-block;
-        padding: 0 10px;
+    .login-logo {
+        position: fixed;  /* 스크롤해도 유지됨 */
+        top: 50px;        /* 화면 상단에서 50px 아래 */
+        left: 50%;
+        transform: translateX(-50%); /* 정확한 가로 중앙 정렬 */
+        width: 160px;     /* 로고 크기 */
+        height: auto;
+        z-index: 200; 
     }
 
-    /* login-box 내부 스타일 재정의 (패딩 조정) */
+    /* 4. 공통 요소 스타일 */
     .signup-page-container h2 {
         font-size: 28px;
         font-weight: 800;
@@ -80,22 +66,6 @@
         margin-bottom: 17px;
     }
 
-    .login-page-container input {
-        /* ... (기존 스타일 유지) ... */
-    }
-    /* 나머지 내부 요소 스타일은 그대로 유지 */
-
-    .login-logo {
-    position: fixed;  /* 스크롤해도 유지됨 */
-    top: 50px;        /* 화면 상단에서 40px 아래 */
-    left: 50%;
-    transform: translateX(-50%); /* 정확한 가로 중앙 정렬 */
-    width: 160px;     /* 로고 크기 */
-    height: auto;
-    z-index: 200; 
-    }
-
-    /* 로그인 버튼 (기존 스타일 재사용 및 보강) */
     .signup-page-container .login-btn {
         width: 100%;
         padding: 14px;
@@ -114,14 +84,6 @@
         background: #333;
     }
 
-    /* 링크 스타일 (기존 스타일 재사용) */
-    .signup-page-container .login-links {
-        font-size: 14px;
-        color: #666;
-        margin-top: 15px;
-    }
-
-    /* SNS 구분선 및 텍스트 */
     .signup-page-container hr {
         border: none;
         border-top: 1px solid #ddd;
@@ -137,7 +99,6 @@
         padding: 0 10px;
     }
 
-    /* 카카오 버튼 (기존 스타일 재사용) */
     .signup-page-container .kakao {
         background: #FEE500;
         border: none;
@@ -151,58 +112,152 @@
         font-size: 15px;
     }
 
-/* 단계 표시 */
-.steps {
-  font-size: 14px;
-  color: #8c8c8c;
-  margin-bottom: 50px;
-}
+    /* 단계 표시 */
+    .steps {
+        font-size: 14px;
+        color: #8c8c8c;
+        margin-bottom: 50px;
+    }
 
-.step-item {
-  margin: 0 6px;
-}
+    .step-item {
+        margin: 0 6px;
+    }
 
-.step-item.active {
-  color: #000000;
-}
+    .step-item.active {
+        color: #000000;
+        font-weight: 600;
+    }
+    
+    /* --- 단계별 화면 표시/숨김 --- */
+    .step {
+        display: none;
+    }
+    .step.active {
+        display: block;
+    }
 
-/* 1단계 */
-.section-title {
-  text-align: left;
-  margin-bottom: 15px;
-  font-size: 16px;
-  font-weight: 600;
-  font-size: 20px;
-}
+    /* --- 1단계 약관동의 스타일 --- */
+    .section-title {
+        text-align: left;
+        margin-bottom: 15px;
+        font-size: 20px;
+        font-weight: 600;
+    }
 
-.checkbox-group {
-  text-align: left;
-  margin-bottom: 30px;
-}
+    .checkbox-group {
+        text-align: left;
+        margin-bottom: 30px;
+    }
 
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 15px 0;
-  cursor: pointer;
-  font-size: 15px;
-}
+    .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 15px 0;
+        cursor: pointer;
+        font-size: 15px;
+    }
 
-.checkbox-group label.all-agree-text {
-  font-weight: 600;
-  margin: 15px 0 40px; 
-}
+    .checkbox-group label.all-agree-text {
+        font-weight: 600;
+        margin: 15px 0 40px; 
+    }
 
-.view-detail {
-  font-size: 12px;
-  color: #9d9d9d;
-  text-decoration: underline;
-  cursor: pointer;
-  white-space: nowrap;
-}
+    .view-detail {
+        font-size: 12px;
+        color: #9d9d9d;
+        text-decoration: underline;
+        cursor: pointer;
+        white-space: nowrap;
+        margin-left: auto; /* 상세보기를 오른쪽 끝으로 밀어냄 */
+    }
 
-</style>
+    /* --- 2단계 정보 입력 폼 스타일 (오류 수정 및 분리) --- */
+    
+    /* 개별 폼 그룹 컨테이너 */
+    .form-group {
+        text-align: left;
+        margin-bottom: 25px; /* 각 입력 필드 사이의 간격 */
+    }
+
+    /* 필수 항목 표시 (파란색 점) */
+    .form-group > label, .form-group .sub-label {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .form-group > label::before {
+        content: '•'; /* 파란색 점 */
+        color: #007bff; /* 파란색 */
+        font-size: 16px;
+        line-height: 0;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    /* 서브 레이블은 점 없이 400 폰트 웨이트 */
+    .form-group .sub-label {
+        font-weight: 400;
+        margin-top: 15px;
+    }
+
+    /* 입력 필드 (Input) 스타일 */
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 15px;
+        color: #333;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #555; 
+        outline: none;
+    }
+
+    /* 입력 필드 설명 텍스트 */
+    .input-description {
+        display: block;
+        font-size: 13px;
+        color: #777;
+        margin-top: 5px;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
+
+    /* 주소 및 생년월일 드롭다운 그룹 */
+    .address-group, .birthdate-group {
+        display: flex;
+        gap: 10px; /* 드롭다운 사이 간격 */
+        margin-top: 8px;
+    }
+
+    /* 드롭다운 개별 너비 조정 */
+    .address-group select, .birthdate-group select {
+        flex-grow: 1; 
+        min-width: 0; 
+    }
+
+    /* 생년월일: 연(Year) 드롭다운 너비를 조금 더 넓게 */
+    .birthdate-group select:first-child {
+        flex-basis: 40%; 
+        flex-grow: 0;
+    }
+    .birthdate-group select:nth-child(2),
+    .birthdate-group select:nth-child(3) {
+        flex-basis: 30%;
+        flex-grow: 0;
+    }
+
+    </style>
 </head>
 <body>
 
@@ -220,8 +275,7 @@
         </section>
 
         <form id="signupForm">
-        <!-- 1단계 -->
-            <section class="step step-1 active">
+        <section class="step step-1 active">
             <h3 class="section-title">전체동의</h3>
 
             <div class="checkbox-group">
@@ -244,20 +298,77 @@
             </div>
             </section>
 
-            <!-- 2단계 -->
             <section class="step step-2">
-                <!-- 내용입력 -->
+                
+                <div class="form-group">
+                    <label for="userId">아이디</label>
+                    <input type="text" id="userId" name="userId" placeholder="아이디 입력" required />
+                    <span class="input-description">영문 소문자/숫자, 4~10자</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호 입력" required />
+                    <span class="input-description">영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10~16자</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">비밀번호 확인</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 재입력" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="userName">이름</label>
+                    <input type="text" id="userName" name="userName" placeholder="이름 입력" required />
+                </div>
+
+                <div class="form-group">
+                    <label>주소</label>
+                    <label class="sub-label">도/시</label>
+                    <div class="address-group">
+                        <select name="city" required>
+                            <option value="">도/시 선택</option>
+                            <option value="seoul">서울특별시</option>
+                            <option value="gyeonggi">경기도</option>
+                            </select>
+                    </div>
+                    
+                    <label class="sub-label" style="margin-top: 15px;">시/군/구</label>
+                    <div class="address-group">
+                        <select name="district" required>
+                            <option value="">시/군/구 선택</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>생년월일</label>
+                    <div class="birthdate-group">
+                        <select name="birthYear" required>
+                            <option value="">년</option>
+                            <option value="2000">2000</option>
+                            <option value="1999">1999</option>
+                            </select>
+                        <select name="birthMonth" required>
+                            <option value="">월</option>
+                            <option value="1">1월</option>
+                            <option value="12">12월</option>
+                            </select>
+                        <select name="birthDay" required>
+                            <option value="">일</option>
+                            <option value="1">1일</option>
+                            <option value="31">31일</option>
+                            </select>
+                    </div>
+                </div>
+
             </section>
 
-            <!-- 3단계 -->
             <section class="step step-3">
-                <!-- 내용입력 -->
-            </section>
+                </section>
 
-            <!-- 4단계(완료) -->
             <section class="step step-4">
-                <!-- 내용입력 -->
-            </section>
+                </section>
         </form>
 
         <button class="login-btn">다음</button>
@@ -266,5 +377,69 @@
         <button class="kakao">카카오로 시작하기</button>
     </div>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const nextButton = document.querySelector('.login-btn');
+        const step1 = document.querySelector('.step-1');
+        const step2 = document.querySelector('.step-2');
+        
+        // 단계 표시 아이템들을 선택합니다.
+        const step1Indicator = document.querySelector('.step-item[data-step="1"]');
+        const step2Indicator = document.querySelector('.step-item[data-step="2"]');
+
+        // 전체 동의 체크박스 이벤트
+        const allAgreeCheckbox = document.getElementById('allAgree');
+        const requiredAgrees = document.querySelectorAll('.required-agree');
+
+        allAgreeCheckbox.addEventListener('change', function() {
+            requiredAgrees.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+        // '다음' 버튼 클릭 이벤트 리스너
+        nextButton.addEventListener('click', function(e) {
+            e.preventDefault(); // 폼 제출 방지
+
+            // --- 1단계 (약관 동의) 처리 ---
+            if (step1.classList.contains('active')) {
+                
+                let allRequiredAgreed = true;
+                requiredAgrees.forEach(checkbox => {
+                    if (!checkbox.checked) {
+                        allRequiredAgreed = false;
+                    }
+                });
+
+                if (allRequiredAgreed) {
+                    // 1. 현재 단계 비활성화 (숨기기)
+                    step1.classList.remove('active');
+                    
+                    // 2. 다음 단계 활성화 (보이기)
+                    step2.classList.add('active');
+                    
+                    // 3. 단계 표시 업데이트
+                    step1Indicator.classList.remove('active');
+                    step2Indicator.classList.add('active');
+                    
+                    // 버튼 텍스트는 그대로 '다음'으로 유지
+                    nextButton.textContent = '다음';
+
+                } else {
+                    alert('필수 약관에 모두 동의해야 다음 단계로 이동할 수 있습니다.');
+                }
+
+            // --- 2단계 (정보 입력) 처리 ---
+            } else if (step2.classList.contains('active')) {
+                // TODO: 여기에 2단계 유효성 검사 로직 추가 (아이디, 비밀번호, 이름 등)
+                
+                // 임시로 3단계로 이동하는 알림
+                alert('2단계 정보 입력 완료 (3단계로 이동 예정)');
+                
+                // 실제 구현: 2단계 유효성 검사 통과 후 3단계로 이동 로직 작성
+            }
+        });
+    });
+    </script>
 </body>
 </html>
