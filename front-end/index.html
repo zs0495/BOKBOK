@@ -41,7 +41,7 @@
       </ul>
     </div>
     <div class="auth">
-    <a href="signup.html">회원가입</a> | <a href="login.html" id="loginBtn">로그인</a> 
+    <a href="signup.html">회원가입</a> | <a href="login.html" id="loginBtn">로그인</a>
     </div>
   </nav>
 
@@ -58,21 +58,12 @@
                 <div class="slide-content"></div>
             </div>
         </div>
-
-        <!-- <button class="slider-btn prev">‹</button>
-        <button class="slider-btn next">›</button>
-        
-        <div class="indicator">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-        </div> -->
     </div>
 </section>
 
   <!-- ### 바로가기 -->
   <div class="icon">
-    <a href="mypage.html" class="icon-btn">
+    <a href="#" class="icon-btn">
       <div class="icon-box">
         <img src="../images/icon_favorite.png" alt="">
       </div>
@@ -91,14 +82,6 @@
       <span>FAQ</span>
     </a>
   </div>
-
-  <!-- 검색창 
-  <section class="search-section">
-    <div class="search-box">
-      <input type="text" placeholder="검색어를 입력하세요" />
-      <button>🔍</button>
-    </div>
-  </section>-->
 
   <!-- 주요 기능 카드 -->
   <section class="feature-section">
@@ -129,5 +112,58 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const authMenu = document.querySelector('.auth');
+        
+        // 1. 로그인 상태 확인: localStorage의 'isLoggedIn' 값을 사용해 상태 시뮬레이션
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; 
+
+        function handleLogout(e) {
+            e.preventDefault();
+            
+            // 2. 로그아웃 처리: localStorage 상태 변경
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            alert('로그아웃 되었습니다. 초기화면으로 돌아갑니다.');
+            
+            // 3. 페이지 새로고침 또는 메뉴를 로그아웃 상태로 다시 렌더링
+            window.location.reload(); 
+        }
+
+        function renderAuthMenu() {
+            if (isLoggedIn) {
+                // 로그인 상태: 마이페이지 | 로그아웃
+                authMenu.innerHTML = `
+                    <a href="mypage.html">마이페이지</a> | <a href="#" id="logout-link">로그아웃</a>
+                `;
+                
+                // 로그아웃 이벤트 리스너 연결
+                const logoutLink = document.getElementById('logout-link');
+                if (logoutLink) {
+                    logoutLink.addEventListener('click', handleLogout);
+                }
+
+            } else {
+                // 로그아웃 상태: 회원가입 | 로그인
+                authMenu.innerHTML = `
+                    <a href="signup.html">회원가입</a> | <a href="login.html" id="loginBtn">로그인</a>
+                `;
+            }
+        }
+        
+        // 초기 메뉴 렌더링 실행
+        renderAuthMenu();
+        
+        // 개발 테스트용: 로그인 상태를 쉽게 변경할 수 있는 함수 (개발자 도구에서 실행)
+        /* window.simulateLogin = function(state) {
+            localStorage.setItem('isLoggedIn', state ? 'true' : 'false');
+            window.location.reload();
+        }
+        // 예: 로그인 상태로 변경: simulateLogin(true)
+        // 예: 로그아웃 상태로 변경: simulateLogin(false)
+        */
+    });
+  </script>
 </body>
 </html>
