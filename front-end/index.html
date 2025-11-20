@@ -75,7 +75,7 @@
       </div>
       <span>필수 서류</span>
     </a>
-    <a href="#" class="icon-btn">
+    <a href="faq.html" class="icon-btn">
       <div class="icon-box">
         <img src="../images/icon_questionmark.png" alt="">
       </div>
@@ -83,28 +83,71 @@
     </a>
   </div>
 
-  <!-- 주요 기능 카드 -->
   <section class="feature-section">
+    <h2 class="feature-title">지금 당장 클릭 한번으로<br />나에게 딱 맞는 복지 정책을 알아보세요</h2>
     <div class="card-container">
-      <div class="card"></div>
-      <div class="card"></div>
-      <div class="card"></div>
+      
+      <a href="public.html" class="feature-card public-card">
+        <h3 class="card-title">공공 복지 혜택 모아보기</h3>
+        <p class="card-desc">공공기업 이름1, 공공기업2, 공공기업3,<br />공공기업 이름4의 복지 혜택을 찾아볼 수 있어요</p>
+        <span class="card-link">자세히 보기 &gt;</span>
+      </a>
+
+      <a href="private.html" class="feature-card private-card">
+        <h3 class="card-title">민간 복지 혜택 모아보기</h3>
+        <p class="card-desc">민간기업 이름1, 민간기업 이름2, 민간기업 이름3,<br />민간기업 이름4의 복지 혜택을 찾아볼 수 있어요</p>
+        <span class="card-link">자세히 보기 &gt;</span>
+      </a>
+
     </div>
-    <p>
+    <p class="feature-remark">
       단순히 검색이 아닌 필수 서류까지 꼼꼼히!<br />
       믿음직한 복복이를 경험해보세요
     </p>
   </section>
 
-  <!-- FAQ -->
-  <section class="faq-section">
-    <h2>이용가이드와 자주하는 질문들을 모아봤어요</h2>
-    <div class="faq-container">
-      <div class="faq-card"></div>
-      <div class="faq-card"></div>
-      <div class="faq-card"></div>
-      <div class="faq-card"></div>
+  <section class="notice-section">
+    <h2 class="notice-title">NOTICE</h2>
+    <p class="notice-subtitle">복복 이용가이드와 자주하는 질문들을 모아봤어요</p>
+
+    <div class="notice-scroll-container">
+      
+      <div class="notice-card">
+        <h3 class="card-heading">복복은 정부 공식 서비스 인가요?</h3>
+        <p class="card-text">복복 서비스는 민간협력으로 운영되는 서비스입니다. 하지만, 공공데이터 개방을 통해... (이하 생략)</p>
+        <span class="card-date">2025-08-02</span>
+      </div>
+
+      <div class="notice-card">
+        <h3 class="card-heading">주민등록번호나 계좌정보를 입력해야 하나요?</h3>
+        <p class="card-text">아닙니다. 복복은 민감한 개인정보를 요구하지 않습니다. 복지 정책 검색에 필요한 최소한의 정보만... (이하 생략)</p>
+        <span class="card-date">2025-09-21</span>
+      </div>
+      
+      <div class="notice-card">
+        <h3 class="card-heading">복복이가 실제 신청까지 대신 해주나요?</h3>
+        <p class="card-text">복복은 이용자가 직접 신청할 수 있도록 직접 신청 링크를 제공하고, 신청 과정이 복잡하지 않도록... (이하 생략)</p>
+        <span class="card-date">2025-11-02</span>
+      </div>
+      
+      <div class="notice-card">
+        <h3 class="card-heading">복지 서비스 신청 기간은 어떻게 되나요?</h3>
+        <p class="card-text">각 복지 정책마다 신청 기간이 다릅니다. 복복이 서비스 내에서 원하는 정책을 검색하여... (이하 생략)</p>
+        <span class="card-date">2025-11-15</span>
+      </div>
+
+      <div class="notice-card guide-card">
+        <p class="guide-text">복복 A to Z : 복복을 200% 활용하는 방법!</p>
+        <a href="guide.html" class="guide-link">이용 가이드 바로가기 &gt;</a>
+      </div>
+      
     </div>
+  </section>
+
+  </section> <section class="bottom-banner-section">
+      <div class="bottom-banner-image">
+          <img src="../images/guide_btn.png" alt="복복이가 알려주는 복지 가이드">
+      </div>
   </section>
 
   <footer class="footer">
@@ -112,58 +155,7 @@
   </footer>
 
   <script src="script.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const authMenu = document.querySelector('.auth');
-        
-        // 1. 로그인 상태 확인: localStorage의 'isLoggedIn' 값을 사용해 상태 시뮬레이션
-        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; 
+  <script src="auth.js"></script> 
 
-        function handleLogout(e) {
-            e.preventDefault();
-            
-            // 2. 로그아웃 처리: localStorage 상태 변경
-            localStorage.setItem('isLoggedIn', 'false');
-            
-            alert('로그아웃 되었습니다. 초기화면으로 돌아갑니다.');
-            
-            // 3. 페이지 새로고침 또는 메뉴를 로그아웃 상태로 다시 렌더링
-            window.location.reload(); 
-        }
-
-        function renderAuthMenu() {
-            if (isLoggedIn) {
-                // 로그인 상태: 마이페이지 | 로그아웃
-                authMenu.innerHTML = `
-                    <a href="mypage.html">마이페이지</a> | <a href="#" id="logout-link">로그아웃</a>
-                `;
-                
-                // 로그아웃 이벤트 리스너 연결
-                const logoutLink = document.getElementById('logout-link');
-                if (logoutLink) {
-                    logoutLink.addEventListener('click', handleLogout);
-                }
-
-            } else {
-                // 로그아웃 상태: 회원가입 | 로그인
-                authMenu.innerHTML = `
-                    <a href="signup.html">회원가입</a> | <a href="login.html" id="loginBtn">로그인</a>
-                `;
-            }
-        }
-        
-        // 초기 메뉴 렌더링 실행
-        renderAuthMenu();
-        
-        // 개발 테스트용: 로그인 상태를 쉽게 변경할 수 있는 함수 (개발자 도구에서 실행)
-        /* window.simulateLogin = function(state) {
-            localStorage.setItem('isLoggedIn', state ? 'true' : 'false');
-            window.location.reload();
-        }
-        // 예: 로그인 상태로 변경: simulateLogin(true)
-        // 예: 로그아웃 상태로 변경: simulateLogin(false)
-        */
-    });
-  </script>
 </body>
 </html>
