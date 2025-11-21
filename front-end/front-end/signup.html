@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>회원가입 | bokbok</title>
+    <style>
+    
+    /* 1. 전체 화면 배경 및 중앙 정렬 */
+    body {
+        background-color: #ffffff; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0 20px;
+    }
+    
+    /* 2. 회원가입 컨테이너 */
+    .signup-page-container {
+        position: relative;
+        width: 100%;
+        max-width: 440px; /* 최대 너비만 유지하여 내용이 중앙에 모이도록 */
+        padding: 60px 0; /* 좌우 패딩 제거, 상하 패딩만 유지 */
+        text-align: center;
+        margin: 40px 0;
+    }
+
+    /* 3. 뒤로 가기 버튼 및 로고 */
+    .fixed-top-left {
+        position: fixed; /* 뷰포트 기준으로 위치 고정 */
+        top: 25px;       /* 상단에서 25px */
+        left: 25px;      /* 좌측에서 25px */
+        z-index: 100;    /* 다른 요소 위에 보이도록 */
+    }
+
+    .back-btn {
+        background: none;
+        border: none;
+        font-size: 36px;
+        color: #333;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        /* font-size: px; 오타 수정 */
+        line-height: 1;
+    }
+
+    .login-logo {
+        position: fixed;  /* 스크롤해도 유지됨 */
+        top: 50px;        /* 화면 상단에서 50px 아래 */
+        left: 50%;
+        transform: translateX(-50%); /* 정확한 가로 중앙 정렬 */
+        width: 160px;     /* 로고 크기 */
+        height: auto;
+        z-index: 200; 
+    }
+
+    /* 4. 공통 요소 스타일 */
+    .signup-page-container h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-top: 30px;
+        margin-bottom: 17px;
+    }
+
+    .signup-page-container .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: #111;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 30px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .signup-page-container .login-btn:hover {
+        background: #333;
+    }
+
+    .signup-page-container hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 40px 0 30px;
+    }
+    .sns-login-text {
+        font-size: 13px;
+        color: #777;
+        position: relative;
+        top: -15px;
+        background: #fff;
+        display: inline-block;
+        padding: 0 10px;
+    }
+
+    .signup-page-container .kakao {
+        background: #FEE500;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #3A1D1D;
+        margin-top: 0;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    /* 단계 표시 */
+    .steps {
+        font-size: 14px;
+        color: #8c8c8c;
+        margin-bottom: 50px;
+    }
+
+    .step-item {
+        margin: 0 6px;
+    }
+
+    .step-item.active {
+        color: #000000;
+        font-weight: 600;
+    }
+    
+    /* --- 단계별 화면 표시/숨김 --- */
+    .step {
+        display: none;
+    }
+    .step.active {
+        display: block;
+    }
+
+    /* --- 1단계 약관동의 스타일 --- */
+    .section-title {
+        text-align: left;
+        margin-bottom: 15px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .checkbox-group {
+        text-align: left;
+        margin-bottom: 30px;
+    }
+
+    .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 15px 0;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .checkbox-group label.all-agree-text {
+        font-weight: 600;
+        margin: 15px 0 40px; 
+    }
+
+    .view-detail {
+        font-size: 12px;
+        color: #9d9d9d;
+        text-decoration: underline;
+        cursor: pointer;
+        white-space: nowrap;
+        margin-left: auto; /* 상세보기를 오른쪽 끝으로 밀어냄 */
+    }
+
+    /* --- 2단계 정보 입력 폼 스타일 (오류 수정 및 분리) --- */
+    
+    /* 개별 폼 그룹 컨테이너 */
+    .form-group {
+        text-align: left;
+        margin-bottom: 25px; /* 각 입력 필드 사이의 간격 */
+    }
+
+    /* 필수 항목 표시 (파란색 점) */
+    .form-group > label, .form-group .sub-label {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .form-group > label::before {
+        content: '•'; /* 파란색 점 */
+        color: #007bff; /* 파란색 */
+        font-size: 16px;
+        line-height: 0;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    /* 서브 레이블은 점 없이 400 폰트 웨이트 */
+    .form-group .sub-label {
+        font-weight: 400;
+        margin-top: 15px;
+    }
+
+    /* 입력 필드 (Input) 스타일 */
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 15px;
+        color: #333;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #555; 
+        outline: none;
+    }
+
+    /* 입력 필드 설명 텍스트 */
+    .input-description {
+        display: block;
+        font-size: 13px;
+        color: #777;
+        margin-top: 5px;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
+
+    /* 주소 및 생년월일 드롭다운 그룹 */
+    .address-group, .birthdate-group {
+        display: flex;
+        gap: 10px; /* 드롭다운 사이 간격 */
+        margin-top: 8px;
+    }
+
+    /* 드롭다운 개별 너비 조정 */
+    .address-group select, .birthdate-group select {
+        flex-grow: 1; 
+        min-width: 0; 
+    }
+
+    /* 생년월일: 연(Year) 드롭다운 너비를 조금 더 넓게 */
+    .birthdate-group select:first-child {
+        flex-basis: 40%; 
+        flex-grow: 0;
+    }
+    .birthdate-group select:nth-child(2),
+    .birthdate-group select:nth-child(3) {
+        flex-basis: 30%;
+        flex-grow: 0;
+    }
+    /* --- 2-2단계 추가 스타일 --- */
+
+    /* 섹션 제목 (나의 키워드, 소득 분위) */
+    .section-title-2 {
+        text-align: left;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 30px 0 15px;
+        display: flex;
+        align-items: center;
+    }
+    .section-title-2:first-child {
+        margin-top: 0;
+    }
+
+    /* --- 2-2단계 추가 스타일 --- */
+
+    /* 섹션 제목 (나의 키워드, 소득 분위) */
+    .section-title-2 {
+        text-align: left;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 30px 0 15px;
+        display: flex;
+        align-items: center;
+    }
+    .section-title-2:first-child {
+        margin-top: 0;
+    }
+
+    /* ★★★ 새로운 키워드 드롭다운 스타일 ★★★ */
+    .keyword-select-group select {
+        /* 기존 폼 입력 필드 스타일 재사용 */
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 15px;
+        color: #333;
+        transition: border-color 0.2s;
+    }
+
+    /* ★★★ 선택된 키워드 컨테이너 스타일 ★★★ */
+    .selected-keywords-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        text-align: left;
+        min-height: 40px; /* 키워드가 없을 때도 공간 유지 */
+        margin-bottom: 20px;
+    }
+
+    /* ★★★ 개별 선택된 키워드 태그 스타일 ★★★ */
+    .selected-keyword-tag {
+        display: flex;
+        align-items: center;
+        background-color: #79A0DF; /* 배경색: 청년색(파란색 계열) */
+        color: white;
+        padding: 8px 12px;
+        padding-right: 5px; /* X 버튼 공간 확보 */
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        user-select: none;
+    }
+
+    /* ★★★ 태그 내 취소 버튼 스타일 (X) ★★★ */
+    .remove-tag-btn {
+        background: none;
+        border: none;
+        color: white;
+        margin-left: 8px;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 4px;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .remove-tag-btn:hover {
+        opacity: 1;
+    }
+
+    /* 소득 분위 드롭다운 */ /* (이 부분은 유지됩니다) */
+    /* ... */
+
+    /* 나의 상황 텍스트 영역 */ /* (이 부분은 유지됩니다) */
+    /* ... */
+
+    /* 소득 분위 드롭다운 */
+    .income-group select {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 15px;
+        color: #333;
+        margin-top: 8px;
+    }
+
+    /* 나의 상황 텍스트 영역 */
+    .status-group {
+        text-align: left;
+    }
+    .status-group textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 15px;
+        resize: vertical;
+        transition: min-height 0.3s ease-out;
+    }
+
+    /* 텍스트 영역 축소 시 스타일 */
+    .status-group.collapsed textarea {
+        min-height: 0;
+        height: 0; /* 시각적으로 완전히 접힘 */
+        padding-top: 0;
+        padding-bottom: 0;
+        border-color: transparent;
+    }
+    .status-group.collapsed .status-description {
+        display: none;
+    }
+    .status-group.collapsed .input-later-btn {
+        text-align: right;
+        margin-top: 15px;
+    }
+    /* 다음에 입력할게요 버튼 */
+    .input-later-btn {
+        display: block;
+        text-align: right;
+        font-size: 14px;
+        color: #999;
+        text-decoration: underline;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    /* --- 3단계 (가입 완료) 추가 스타일 --- */
+    .step-3-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    .step-3-content img {
+        width: 200px; /* 이미지 크기 조정 */
+        height: auto;
+        margin-bottom: 50px;
+    }
+
+    /* 완료 버튼 (기존 .login-btn 스타일을 재사용하되 텍스트 변경을 위해 스크립트 사용) */
+
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn fixed-top-left">‹</a>
+    <a href="index.html">
+        <img src="../images/bokbok_typo.png" alt="로고" class="login-logo">
+    </a>
+
+    <div class="signup-page-container">
+        <h2>회원가입</h2>
+        <section class="steps">
+            <span class="step-item active" data-step="1">1. 약관동의</span>
+            <span class="step-item" data-step="2">2. 정보입력</span>
+            <span class="step-item" data-step="3">3. 가입완료</span>
+        </section>
+
+        <form id="signupForm">
+        <section class="step step-1 active">
+            <h3 class="section-title">전체동의</h3>
+
+            <div class="checkbox-group">
+                <label class="all-agree-text">
+                    <input type="checkbox" id="allAgree" />
+                    <span>모든 약관을 확인하고 전체 동의합니다.</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" class="agree required-agree" />
+                    <span>이용약관 동의 (필수)</span>
+                    <a href="input.html" target="_blank" class="view-detail">전문보기</a>
+                </label>
+
+                <label>
+                    <input type="checkbox" class="agree required-agree" />
+                    <span>개인정보 수집 및 이용 동의 (필수)</span>
+                    <a href="input.html" target="_blank" class="view-detail">전문보기</a>
+                </label>
+            </div>
+            </section>
+
+            <section class="step step-2">
+                
+                <div class="form-group">
+                    <label for="userId">아이디</label>
+                    <input type="text" id="userId" name="userId" placeholder="아이디 입력" required />
+                    <span class="input-description">영문 소문자/숫자, 4~10자</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호 입력" required />
+                    <span class="input-description">영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10~16자</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">비밀번호 확인</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 재입력" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="userName">이름</label>
+                    <input type="text" id="userName" name="userName" placeholder="이름 입력" required />
+                </div>
+
+                <div class="form-group">
+                    <label>주소</label>
+                    <label class="sub-label">도/시</label>
+                    <div class="address-group">
+                        <select name="city" required>
+                            <option value="">도/시 선택</option>
+                            <option value="seoul">서울특별시</option>
+                            <option value="gyeonggi">경기도</option>
+                            </select>
+                    </div>
+                    
+                    <label class="sub-label" style="margin-top: 15px;">시/군/구</label>
+                    <div class="address-group">
+                        <select name="district" required>
+                            <option value="">시/군/구 선택</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>생년월일</label>
+                    <div class="birthdate-group">
+                        <select name="birthYear" required>
+                            <option value="">년</option>
+                            <option value="2000">2000</option>
+                            <option value="1999">1999</option>
+                            </select>
+                        <select name="birthMonth" required>
+                            <option value="">월</option>
+                            <option value="1">1월</option>
+                            <option value="12">12월</option>
+                            </select>
+                    </div>
+                </div>
+
+            </section>
+            <section class="step step-2-2">
+    
+            <h3 class="section-title-2">나의 키워드</h3>
+            
+            <div class="form-group keyword-select-group">
+                <select id="keywordSelect" name="keywordSelect">
+                    <option value="" disabled selected>키워드 선택 (하나씩 선택)</option>
+                    <option value="국가유공자">국가유공자</option>
+                    <option value="아동">아동</option>
+                    <option value="자영업">자영업</option>
+                    <option value="학생(청소년)">학생(청소년)</option>
+                    <option value="청년">청년</option>
+                    <option value="질병">질병</option>
+                    <option value="한부모가정">한부모가정</option>
+                    <option value="취업">취업</option>
+                    <option value="장학금">장학금</option>
+                    <option value="차상위/저소득">차상위/저소득</option>
+                    <option value="장애인">장애인</option>
+                    <option value="교육">교육</option>
+                    <option value="임산부">임산부</option>
+                    <option value="금융">금융</option>
+                    <option value="노인">노인</option>
+                    <option value="거주">거주</option>
+                    <option value="(신혼)부부">(신혼)부부</option>
+                </select>
+            </div>
+            
+            <div id="selectedKeywordsContainer" class="selected-keywords-container">
+                </div>
+
+            <h3 class="section-title-2" style="margin-top: 50px;">나의 상황</h3>
+            <div class="status-group" id="statusGroup">
+                <textarea 
+                    id="myStatus" 
+                    name="myStatus" 
+                    placeholder='"이번 달 월세가 너무 부담돼요"와 같은 실직, 주거 부담, 의료비 필요, 교육/양육, 긴급 생계 등 직접적인 키워드가 들어갈수록 정확한 결과가 나와요'
+                ></textarea>
+                <span class="input-later-btn" id="inputLaterBtn">다음에 입력할게요</span>
+            </div>
+            </section>
+            <section class="step step-3">
+                <div class="step-3-content">
+                    <img src="../images/done_bok.png" alt="가입 완료 캐릭터" class="complete-image">
+                </div>
+            </section>
+        </form>
+
+        <button class="login-btn">다음</button>
+        <hr />
+        <p class="sns-login-text">SNS 계정으로 로그인</p>
+        <button class="kakao">카카오로 시작하기</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nextButton = document.querySelector('.login-btn');
+            const step1 = document.querySelector('.step-1');
+            const step2 = document.querySelector('.step-2');
+            const step2_2 = document.querySelector('.step-2-2');
+            const step3 = document.querySelector('.step-3'); // 3단계 요소 추가
+            
+            // 단계 표시 아이템들
+            const step1Indicator = document.querySelector('.step-item[data-step="1"]');
+            const step2Indicator = document.querySelector('.step-item[data-step="2"]');
+            const step3Indicator = document.querySelector('.step-item[data-step="3"]'); // 3단계 표시 추가
+
+            // 약관 동의 관련 요소
+            const allAgreeCheckbox = document.getElementById('allAgree');
+            const requiredAgrees = document.querySelectorAll('.required-agree');
+            
+            // 키워드 및 나의 상황 관련 요소
+            const keywordButtons = document.querySelectorAll('.keyword-btn');
+            const inputLaterBtn = document.getElementById('inputLaterBtn');
+            const statusGroup = document.getElementById('statusGroup');
+            const myStatusTextarea = document.getElementById('myStatus');
+            
+            const defaultPlaceholder = '"이번 달 월세가 너무 부담돼요"와 같은 실직, 주거 부담, 의료비 필요, 교육/양육, 긴급 생계 등 직접적인 키워드가 들어갈수록 정확한 결과가 나와요';
+
+            // 초기 상태: 1단계 활성화 (페이지 로딩 시)
+            step1.classList.add('active');
+            nextButton.textContent = '다음';
+
+            /* --- 1. 전체 동의 체크박스 연동 기능 --- */
+            allAgreeCheckbox.addEventListener('change', function() {
+                requiredAgrees.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+            
+            requiredAgrees.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    let allChecked = true;
+                    requiredAgrees.forEach(cb => {
+                        if (!cb.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    allAgreeCheckbox.checked = allChecked;
+                });
+            });
+
+            /* --- 2. 키워드 드롭다운 및 태그 생성 기능 --- */
+            const keywordSelect = document.getElementById('keywordSelect');
+            const selectedKeywordsContainer = document.getElementById('selectedKeywordsContainer');
+            
+            // 현재 선택된 키워드를 저장하는 배열
+            let selectedKeywords = [];
+
+            // 헬퍼: 키워드 태그를 DOM에 렌더링
+            function renderKeywords() {
+                selectedKeywordsContainer.innerHTML = ''; // 컨테이너 초기화
+                
+                selectedKeywords.forEach(keyword => {
+                    // 태그 엘리먼트 생성
+                    const tag = document.createElement('div');
+                    tag.classList.add('selected-keyword-tag');
+                    tag.textContent = keyword;
+                    tag.dataset.keyword = keyword; // 데이터 저장을 위해 data-* 사용
+
+                    // 취소 버튼 (X) 생성
+                    const removeBtn = document.createElement('button');
+                    removeBtn.classList.add('remove-tag-btn');
+                    removeBtn.innerHTML = '&times;'; // 'x' 기호
+                    
+                    // 삭제 이벤트 리스너 추가
+                    removeBtn.addEventListener('click', function() {
+                        removeKeyword(keyword);
+                    });
+
+                    tag.appendChild(removeBtn);
+                    selectedKeywordsContainer.appendChild(tag);
+                });
+                
+                // 드롭다운 초기 상태로 복원
+                keywordSelect.value = ""; 
+            }
+
+            // 헬퍼: 키워드 제거
+            function removeKeyword(keyword) {
+                selectedKeywords = selectedKeywords.filter(k => k !== keyword);
+                renderKeywords();
+            }
+
+            // 드롭다운 선택 이벤트 리스너
+            keywordSelect.addEventListener('change', function() {
+                const selectedKeyword = this.value;
+
+                if (selectedKeyword && !selectedKeywords.includes(selectedKeyword)) {
+                    selectedKeywords.push(selectedKeyword);
+                    renderKeywords();
+                } else if (selectedKeywords.includes(selectedKeyword)) {
+                    alert('이미 선택된 키워드입니다.');
+                    // 선택 후 드롭다운을 다시 초기 상태로 되돌립니다.
+                    this.value = ""; 
+                }
+            });
+            
+            /* --- 3. '나의 상황' 입력창 축소/확대 기능 --- */
+            inputLaterBtn.addEventListener('click', function() {
+                if (statusGroup.classList.contains('collapsed')) {
+                    statusGroup.classList.remove('collapsed');
+                    myStatusTextarea.style.minHeight = '150px';
+                    this.textContent = '다음에 입력할게요';
+                    myStatusTextarea.placeholder = defaultPlaceholder;
+                    myStatusTextarea.value = ''; 
+                    myStatusTextarea.focus();
+                } else {
+                    myStatusTextarea.style.minHeight = '0'; 
+                    statusGroup.classList.add('collapsed');
+                    this.textContent = '나의 상황 입력';
+                    myStatusTextarea.placeholder = '';
+                    myStatusTextarea.value = ''; 
+                }
+            });
+            
+
+            /* --- 4. 단계 전환 로직 (수정된 부분) --- */
+            nextButton.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                
+                if (step1.classList.contains('active')) {
+                    // 1단계 -> 2단계
+                    let allRequiredAgreed = true;
+                    requiredAgrees.forEach(checkbox => { if (!checkbox.checked) allRequiredAgreed = false; });
+                    if (allRequiredAgreed) {
+                        step1.classList.remove('active');
+                        step2.classList.add('active');
+                        step1Indicator.classList.remove('active');
+                        step2Indicator.classList.add('active');
+                        nextButton.textContent = '다음';
+                        window.scrollTo(0, 0); // 스크롤 초기화
+                    } else { alert('필수 약관에 모두 동의해야 다음 단계로 이동할 수 있습니다.'); }
+                
+                } else if (step2.classList.contains('active')) {
+                    // 2단계 -> 2-2단계
+                    // TODO: 2단계 유효성 검사 추가
+                    step2.classList.remove('active');
+                    step2_2.classList.add('active');
+                    nextButton.textContent = '다음';
+                    window.scrollTo(0, 0); // 스크롤 초기화
+
+                } else if (step2_2.classList.contains('active')) {
+                    // 2-2단계 -> 3단계 (가입 완료)
+                    // TODO: 2-2단계 데이터 전송 로직 추가 (필요시)
+                    step2_2.classList.remove('active');
+                    step3.classList.add('active');
+                    
+                    step2Indicator.classList.remove('active');
+                    step3Indicator.classList.add('active');
+                    
+                    // 버튼 텍스트를 '완료'로 변경
+                    nextButton.textContent = '완료'; 
+
+                    window.scrollTo(0, 0); // 스크롤 초기화
+                
+                } else if (step3.classList.contains('active')) {
+                    // 3단계 -> 랜딩 페이지로 이동
+                    window.location.href = 'index.html'; // 'index.html'을 랜딩 페이지 URL로 가정
+
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bokbok_public</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 네비게이션 -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="../images/bokbok_typo.png" alt="로고">
+      </a>
+    </div>
+    <div class="menu">
+
+      <ul>
+        <li>
+          <a href="#">서비스 소개</a>
+          <ul>
+            <li><a href="service.html">서비스 개요</a></li>
+            <li><a href="team.html">팀 소개</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">주요 기능</a>
+          <ul>
+            <li><a href="public.html">공공 복지 검색</a></li>
+            <li><a href="private.html">민간 복지 검색</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">라운지</a>
+          <ul>
+            <li><a href="library.html">자료실</a></li>
+            <li><a href="guide.html">이용 가이드</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+          </ul>
+        </li>
+      </ul>
+
+    </div>
+    <div class="auth">
+      <a href="#">회원가입</a> | <a href="login.html" id="loginBtn">로그인</a>
+    </div>
+  </nav>
+
+    <!-- 서비스 개요 페이지 -->
+    <main class="welfare-page">
+        <section class="welfare-header">
+            <h2>공공 복지 검색</h2>
+        </section>
+
+        <section class="welfare-container">
+            <p class="welfare-intro">
+            복복이는 정부와 지자체가 제공하는 수천 개의 복지 제도 중, 사용자에게 실제로 해당되는 혜택만 정확히 찾아주는 검색 기능을 제공합니다.
+            </p>
+
+            <ul class="welfare-list">
+            <li>
+                <strong>정부·지자체 복지 혜택 자동 매칭</strong>
+                나이, 거주지, 소득 분위, 가구 구성 등 기본 정보만 입력하면 사용자가 조건에 맞는 복지 혜택을 복복이 자동으로 분류해줍니다.
+                방대한 제도를 스스로 검색할 필요가 없어요.
+            </li>
+            <li>
+                <strong>계층별 / 상황별 추천</strong>
+                아동, 청년, 신혼부부, 노인, 장애인 등 계층별 분류와 실직·질병·주거·교육 등 상황별 키워드 기반 맞춤 추천이 가능합니다.
+            </li>
+            <li>
+                <strong>신청 절차·서류 안내</strong>
+                각 복지 혜택에 필요한 신청 방법, 준비 서류, 접수 방식 등을 어려운 행정 용어 없이 <br>
+                이해하기 쉽게 정리해 안내합니다.
+            </li>
+            </ul>
+        </section>
+
+        <div class="welfare-mascot-wrap">
+            <img src="../images/upper_bok.png" alt="복복이 캐릭터" class="welfare-mascot" />
+        </div>
+    </main>
+
+
+  <footer class="footer">
+    © 2025 bokbok. All rights reserved.
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+  
+</body>
+</html>
