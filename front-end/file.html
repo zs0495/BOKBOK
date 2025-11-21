@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bokbok_doc</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+
+    /* 1. 뒤로 가기 버튼 및 로고 */
+    .fixed-top-left {
+        position: fixed; /* 뷰포트 기준으로 위치 고정 */
+        top: 25px;       /* 상단에서 25px */
+        left: 25px;      /* 좌측에서 25px */
+        z-index: 100;    /* 다른 요소 위에 보이도록 */
+    }
+
+    .back-btn {
+        background: none;
+        border: none;
+        font-size: 36px;
+        color: #333;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        /* font-size: px; 오타 수정 */
+        line-height: 1;
+    }
+
+    .login-logo {
+        position: fixed;  /* 스크롤해도 유지됨 */
+        top: 50px;        /* 화면 상단에서 50px 아래 */
+        left: 50%;
+        transform: translateX(-50%); /* 정확한 가로 중앙 정렬 */
+        width: 160px;     /* 로고 크기 */
+        height: auto;
+        z-index: 200; 
+    }
+
+    .doc-page {
+    margin: 80px 0 40px; 
+    padding: 30px 0 40px;
+    box-sizing: border-box;
+    }
+
+    /* 2. 페이지 제목 */
+    .doc-header {
+    background: #f5f9ff; 
+    border: 1px solid #ddd;
+    padding: 30px 0;      
+    text-align: center;
+    border-left: 0;          
+    border-right: 0;
+    }
+
+    .doc-header h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+    }
+
+    /* 3. 혜택 리스트 */
+    .doc-list-wrapper {
+        width: 70%;
+        padding: 16px 20px 10px;
+        margin: 10px auto 0;
+    }
+
+    .doc-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f2f2f2;
+    font-size: 16px;
+    }
+
+    .doc-col {
+    display: inline-block;
+    }
+
+    .doc-col-index {
+    width: 32px;
+    text-align: left;
+    margin-right: 80px;
+    }
+
+    .doc-col-org {
+    flex: 1;
+    text-align: left;
+    }
+
+    .doc-col-benefit {
+    flex: 1;
+    text-align: left;
+    }
+
+    .doc-col-arrow {
+    width: 24px;
+    text-align: right;
+    font-size: 16px;
+    }
+
+    .doc-row {
+    cursor: pointer;
+    }
+    .doc-row:hover {
+    background-color: #fafafa;
+    }
+
+    /* 4. 필수 서류 자세히 보기 */
+    .hidden {
+    display: none !important;
+    }
+
+    .detail-page {
+    max-width: 80%;
+    margin: 100px auto 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 80px;
+    
+    min-height: 100vh; 
+    align-items: stretch;
+    }
+
+    /* 왼쪽 사이드 */
+    .detail-sidebar {
+    width: 240px;
+    background: #f5f9ff;
+    border-right: 1px solid #e5e5e5;
+    padding: 30px 0;
+    margin-right: 40px;
+    }
+    .detail-sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    }
+    .detail-sidebar li {
+    display: flex;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #aaa;
+    }
+    .detail-sidebar li.active {
+    color: #7CA2E0;
+    }
+    .detail-sidebar .index { 
+    width: 20px; 
+    margin-right: 8px; 
+    }
+    .detail-sidebar .org {
+    margin-right: 20px;  
+    }
+
+    /* 오른쪽 내용 */
+    .detail-content {
+    flex: 1;
+    padding-top: 40px;
+    padding-left: 100px;
+    }
+    .benefit-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    }
+    .doc-list {
+    list-style: disc;
+    margin-left: 20px;
+    padding-left: 0;
+    }
+    .doc-list li {
+    font-size: 17px;
+    line-height: 1.8;  
+    margin-bottom: 8px;   
+    }
+
+    .tooltip-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
+    }
+
+    .tooltip-box {
+    position: absolute;
+    top: 24px;          /* 아이콘/링크 아래로 */
+    left: 0;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #555;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    /* 마우스 올라갔을 때 보이게 */
+    .tooltip-wrapper:hover .tooltip-box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    }
+    .tooltip-icon {
+    background: #7CA2E0;
+    color: #fff;
+    font-size: 8px;
+    padding: 1px 6px;
+    border-radius: 50%;
+    margin-left: 6px;
+    }
+    .tooltip-link {
+    color: #7CA2E0;
+    font-size: 15px;
+    margin-left: 4px;
+    }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="index.html" class="back-btn fixed-top-left">‹</a>
+        <a href="index.html">
+            <img src="../images/bokbok_logo.png" alt="로고" class="login-logo">
+        </a>
+    </div>
+    
+    <main>
+    <section id="listPage" class="doc-page">
+    <section class="doc-header">
+        <h2>혜택별 필수 서류</h2>
+    </section>
+
+    <section class="doc-list-wrapper">
+        <div class="doc-row">
+        <span class="doc-col doc-col-index">1</span>
+        <span class="doc-col doc-col-org">기관명</span>
+        <span class="doc-col doc-col-benefit">혜택명</span>
+        <span class="doc-col doc-col-arrow">&gt;</span>
+        </div>
+
+        <div class="doc-row">
+        <span class="doc-col doc-col-index">2</span>
+        <span class="doc-col doc-col-org">기관명</span>
+        <span class="doc-col doc-col-benefit">혜택명</span>
+        <span class="doc-col doc-col-arrow">&gt;</span>
+        </div>
+
+        <div class="doc-row">
+        <span class="doc-col doc-col-index">3</span>
+        <span class="doc-col doc-col-org">기관명</span>
+        <span class="doc-col doc-col-benefit">혜택명</span>
+        <span class="doc-col doc-col-arrow">&gt;</span>
+        </div>
+
+        <div class="doc-row">
+        <span class="doc-col doc-col-index">4</span>
+        <span class="doc-col doc-col-org">기관명</span>
+        <span class="doc-col doc-col-benefit">혜택명</span>
+        <span class="doc-col doc-col-arrow">&gt;</span>
+        </div>
+
+        <div class="doc-row">
+        <span class="doc-col doc-col-index">5</span>
+        <span class="doc-col doc-col-org">기관명</span>
+        <span class="doc-col doc-col-benefit">혜택명</span>
+        <span class="doc-col doc-col-arrow">&gt;</span>
+        </div>
+    </section>
+    </section>
+
+    <section id="detailPage" class="detail-page hidden">
+        <aside class="detail-sidebar">
+        <ul>
+            <li class="active"><span class="index">1</span><span class="org">기관명</span><span class="benefit">혜택명1</span></li>
+            <li><span class="index">2</span><span class="org">기관명</span><span class="benefit">혜택명2</span></li>
+            <li><span class="index">3</span><span class="org">기관명</span><span class="benefit">혜택명3</span></li>
+            <li><span class="index">3</span><span class="org">기관명</span><span class="benefit">혜택명4</span></li>
+            <li><span class="index">3</span><span class="org">기관명</span><span class="benefit">혜택명5</span></li>
+        </ul>
+        </aside>
+
+        <section class="detail-content">
+        <h2 id="detailBenefitTitle" class="benefit-title">혜택명</h2>
+
+        <ul class="doc-list">
+            <li>필수 서류 1
+            <span class="tooltip-icon">?</span>
+            <a href="#" class="tooltip-link">부양의무자 재산가액</a>
+            </li>
+            <li>필수 서류 2
+            <span class="tooltip-icon">?</span>
+            <a href="#" class="tooltip-link">부양의무자 재산가액</a>
+            </li>
+            <li>필수 서류 3
+            <span class="tooltip-icon">?</span>
+            <a href="#" class="tooltip-link">부양의무자 재산가액</a>
+            </li>
+            <li>필수 서류 4
+            <span class="tooltip-icon">?</span>
+            <a href="#" class="tooltip-link">부양의무자 재산가액</a>
+            </li>
+            <li>필수 서류 5
+            <span class="tooltip-icon">?</span>
+            <a href="#" class="tooltip-link">부양의무자 재산가액</a>
+            </li>
+        </ul>
+        </section>
+    </section>
+
+    </main>
+
+  <footer class="footer">
+    © 2025 bokbok. All rights reserved.
+  </footer>
+  
+  <script src="auth.js"></script>
+  <script>
+    const listPage = document.getElementById('listPage');
+    const detailPage = document.getElementById('detailPage');
+    const rows = document.querySelectorAll('.doc-row');
+    const detailTitle = document.getElementById('detailBenefitTitle');
+    const sidebarItems = document.querySelectorAll('.detail-sidebar li');
+
+    // 예시 데이터
+    const benefitDocs = {
+        "혜택명1": [
+        { text: "필수 서류 1-1" },
+        { text: "필수 서류 1-2" },
+        { text: "필수 서류 1-3" },
+        { text: "필수 서류 1-4" },
+        {
+        text: "필수 서류 1-5",
+        tooltipTitle: "부양의무자 재산가액",
+        tooltipDesc: "여기에 부양의무자 재산가액에 대한 설명이 들어갑니다."
+        }
+        ],
+        "혜택명2": [
+        { text: "필수 서류 2-1" },
+        { text: "필수 서류 2-2" },
+        { text: "필수 서류 2-3" },
+        { text: "필수 서류 2-4" },
+        {
+        text: "필수 서류 2-5",
+        tooltipTitle: "부양의무자 재산가액",
+        tooltipDesc: "여기에 부양의무자 재산가액에 대한 설명이 들어갑니다."
+        }
+        ],
+        "혜택명3": [
+        { text: "필수 서류 3-1" },
+        { text: "필수 서류 3-2" },
+        { text: "필수 서류 3-3" },
+        { text: "필수 서류 3-4" },
+        {
+        text: "필수 서류 3-5",
+        tooltipTitle: "부양의무자 재산가액",
+        tooltipDesc: "여기에 부양의무자 재산가액에 대한 설명이 들어갑니다."
+        }
+        ],
+        "혜택명4": [
+        { text: "필수 서류 4-1" },
+        { text: "필수 서류 4-2" },
+        { text: "필수 서류 4-3" },
+        { text: "필수 서류 4-4" },
+        {
+        text: "필수 서류 4-5",
+        tooltipTitle: "부양의무자 재산가액",
+        tooltipDesc: "여기에 부양의무자 재산가액에 대한 설명이 들어갑니다."
+        }
+        ],
+        "혜택명5": [
+        { text: "필수 서류 5-1" },
+        { text: "필수 서류 5-2" },
+        { text: "필수 서류 5-3" },
+        { text: "필수 서류 5-4" },
+        {
+        text: "필수 서류 5-5",
+        tooltipTitle: "부양의무자 재산가액",
+        tooltipDesc: "여기에 부양의무자 재산가액에 대한 설명이 들어갑니다."
+        }
+        ]
+    };
+
+    // 목록의 각 행 클릭 시 -> 상세 페이지로
+    rows.forEach(row => {
+        row.addEventListener('click', () => {
+            const indexText = row.querySelector('.doc-col-index').textContent.trim(); 
+            const benefitKey = `혜택명${indexText}`;  
+
+            detailTitle.textContent = benefitKey;
+
+            renderDocs(benefitKey);
+
+            sidebarItems.forEach(li => {
+            const sidebarBenefit = li.querySelector('.benefit').textContent.trim();
+            li.classList.toggle('active', sidebarBenefit === benefitKey);
+            });
+
+            // 화면 전환
+            listPage.classList.add('hidden');
+            detailPage.classList.remove('hidden');
+        });
+    });
+
+    // 상세 페이지
+    function renderDocs(benefitName) {
+    const docList = document.querySelector('.detail-content .doc-list');
+    const docs = benefitDocs[benefitName] || [];
+
+    docList.innerHTML = docs.map(doc => {
+        // 문자열이면 그대로
+        if (typeof doc === 'string') {
+        return `<li>${doc}</li>`;
+        }
+
+        // 객체인데 툴팁이 없는 경우
+        if (!doc.tooltipTitle) {
+        return `<li>${doc.text}</li>`;
+        }
+
+        // 툴팁이 있는 경우
+        return `
+        <li>
+            ${doc.text}
+            <span class="tooltip-wrapper">
+            <span class="tooltip-icon">?</span>
+            <a href="#" class="tooltip-link">${doc.tooltipTitle}</a>
+            <div class="tooltip-box">
+                ${doc.tooltipDesc}
+            </div>
+            </span>
+        </li>
+        `;
+    }).join('');
+    }
+
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+        sidebarItems.forEach(li => li.classList.remove('active'));
+        item.classList.add('active');
+
+        const benefitName = item.querySelector('.benefit').textContent.trim();
+        detailTitle.textContent = benefitName;
+        renderDocs(benefitName);
+        });
+    });
+
+  </script>
+  
+</body>
+</html>
