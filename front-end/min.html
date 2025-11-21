@@ -198,30 +198,42 @@
             padding-bottom: 80px;
         }
 
+        /* ★★★ 매칭 결과 헤더 (제목+태그+마스코트) 레이아웃 변경 ★★★ */
         .result-header {
+            display: flex; /* Flexbox 적용 */
+            align-items: center; /* 수직 중앙 정렬 */
+            justify-content: space-between; /* 요소들을 양 끝으로 분리 */
             margin-bottom: 30px;
+            text-align: left; /* 내부 요소는 왼쪽 정렬을 기본으로 */
+        }
+        
+        .result-text-group {
+            flex-grow: 1; /* 남은 공간을 차지하도록 */
+            max-width: 70%; /* 마스코트에게 공간을 주기 위해 최대 너비 제한 */
+            margin-right: 15px;
         }
 
         .result-title {
             font-size: 18px;
             font-weight: 700;
             color: #333;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-bottom: 10px; /* 기존 20px에서 10px로 줄임 */
+            text-align: left; /* 제목은 왼쪽 정렬 */
         }
 
         .result-mascot {
-            width: 160px; /* 캐릭터 이미지 크기 */
+            width: 100px; /* ★ 마스코트 크기 축소 (공공 페이지와 동일) */
             height: auto;
-            margin: 40px auto 30px;
-            display: block;
+            margin: 0; /* 중앙 정렬 마진 제거 */
+            flex-shrink: 0; 
         }
 
         /* 매칭 성공 시 태그 박스 */
         .tag-box-group {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start; /* ★ 태그 그룹 왼쪽 정렬 */
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .result-tag {
@@ -232,6 +244,7 @@
             font-size: 13px;
             font-weight: 500;
         }
+        /* ------------------- */
 
         /* 복지 혜택 목록 */
         .welfare-result-list {
@@ -556,9 +569,11 @@
 
     <section id="matchSuccessPage" class="welfare-container result-page">
         <div class="result-header">
-            <h2 class="result-title">김복복님에게 딱 맞는 민간 복지 혜택이에요</h2>
-            <div class="tag-box-group">
-                </div>
+            <div class="result-text-group"> 
+                <h2 class="result-title">김복복님에게 딱 맞는 민간 복지 혜택이에요</h2>
+                <div class="tag-box-group">
+                    </div>
+            </div>
             <img src="../images/search_bok.png" alt="매칭 성공 캐릭터" class="result-mascot">
         </div>
 
