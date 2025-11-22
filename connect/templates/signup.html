@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>회원가입 | bokbok</title>
+    <style>
+    
+    /* 1. 전체 화면 배경 및 중앙 정렬 */
+    body {
+        background-color: #ffffff; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0 20px;
+    }
+    
+    /* 2. 회원가입 컨테이너 */
+    .signup-page-container {
+        position: relative;
+        width: 100%;
+        max-width: 440px;
+        padding: 60px 0;
+        text-align: center;
+        margin: 40px 0;
+    }
+
+    /* 3. 뒤로 가기 버튼 및 로고 */
+    .fixed-top-left {
+        position: fixed;
+        top: 25px;
+        left: 25px;
+        z-index: 100;
+    }
+
+    .back-btn {
+        background: none;
+        border: none;
+        font-size: 36px;
+        color: #333;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .login-logo {
+        position: fixed;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 160px;
+        height: auto;
+        z-index: 200; 
+    }
+
+    /* 4. 공통 요소 스타일 */
+    .signup-page-container h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-top: 30px;
+        margin-bottom: 17px;
+    }
+
+    .signup-page-container .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: #111;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 30px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .signup-page-container .login-btn:hover {
+        background: #333;
+    }
+
+    .signup-page-container hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 40px 0 30px;
+    }
+    
+    .sns-login-text {
+        font-size: 13px;
+        color: #777;
+        position: relative;
+        top: -15px;
+        background: #fff;
+        display: inline-block;
+        padding: 0 10px;
+    }
+
+    .signup-page-container .kakao {
+        background: #FEE500;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #3A1D1D;
+        margin-top: 0;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    /* 단계 표시 */
+    .steps {
+        font-size: 14px;
+        color: #8c8c8c;
+        margin-bottom: 50px;
+    }
+
+    .step-item {
+        margin: 0 6px;
+    }
+
+    .step-item.active {
+        color: #000000;
+        font-weight: 600;
+    }
+    
+    /* 단계별 화면 표시/숨김 */
+    .step {
+        display: none;
+    }
+    .step.active {
+        display: block;
+    }
+
+    /* 1단계 약관동의 스타일 */
+    .section-title {
+        text-align: left;
+        margin-bottom: 15px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .checkbox-group {
+        text-align: left;
+        margin-bottom: 30px;
+    }
+
+    .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 15px 0;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .checkbox-group label.all-agree-text {
+        font-weight: 600;
+        margin: 15px 0 40px; 
+    }
+
+    .view-detail {
+        font-size: 12px;
+        color: #9d9d9d;
+        text-decoration: underline;
+        cursor: pointer;
+        white-space: nowrap;
+        margin-left: auto;
+    }
+
+    /* 2단계 정보 입력 폼 스타일 */
+    .form-group {
+        text-align: left;
+        margin-bottom: 25px;
+    }
+
+    .form-group > label, .form-group .sub-label {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .form-group > label::before {
+        content: '•';
+        color: #007bff;
+        font-size: 16px;
+        line-height: 0;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    
+    .form-group .sub-label {
+        font-weight: 400;
+        margin-top: 15px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 15px;
+        color: #333;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #555; 
+        outline: none;
+    }
+
+    .input-description {
+        display: block;
+        font-size: 13px;
+        color: #777;
+        margin-top: 5px;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
+
+    .address-group, .birthdate-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+    }
+
+    .address-group select, .birthdate-group select {
+        flex-grow: 1; 
+        min-width: 0; 
+    }
+
+    .birthdate-group select:first-child {
+        flex-basis: 40%; 
+        flex-grow: 0;
+    }
+    .birthdate-group select:nth-child(2) {
+        flex-basis: 30%;
+        flex-grow: 0;
+    }
+
+    /* 2-2단계 추가 스타일 */
+    .section-title-2 {
+        text-align: left;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 30px 0 15px;
+        display: flex;
+        align-items: center;
+    }
+    .section-title-2:first-child {
+        margin-top: 0;
+    }
+
+    .keyword-select-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box; 
+        font-size: 15px;
+        color: #333;
+        transition: border-color 0.2s;
+    }
+
+    .selected-keywords-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        text-align: left;
+        min-height: 40px;
+        margin-bottom: 20px;
+    }
+
+    .selected-keyword-tag {
+        display: flex;
+        align-items: center;
+        background-color: #79A0DF;
+        color: white;
+        padding: 8px 12px;
+        padding-right: 5px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        user-select: none;
+    }
+
+    .remove-tag-btn {
+        background: none;
+        border: none;
+        color: white;
+        margin-left: 8px;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 4px;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .remove-tag-btn:hover {
+        opacity: 1;
+    }
+
+    .status-group {
+        text-align: left;
+    }
+    .status-group textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 15px;
+        resize: vertical;
+        transition: min-height 0.3s ease-out;
+    }
+
+    .status-group.collapsed textarea {
+        min-height: 0;
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-color: transparent;
+    }
+    .status-group.collapsed .status-description {
+        display: none;
+    }
+    .status-group.collapsed .input-later-btn {
+        text-align: right;
+        margin-top: 15px;
+    }
+
+    .input-later-btn {
+        display: block;
+        text-align: right;
+        font-size: 14px;
+        color: #999;
+        text-decoration: underline;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    /* 3단계 (가입 완료) 추가 스타일 */
+    .step-3-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    .step-3-content img {
+        width: 200px;
+        height: auto;
+        margin-bottom: 50px;
+    }
+
+    </style>
+</head>
+<body>
+
+    <a href="{{ url_for('index') }}" class="back-btn fixed-top-left">‹</a>
+    <a href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" class="login-logo">
+    </a>
+
+    <div class="signup-page-container">
+        <h2>회원가입</h2>
+        <section class="steps">
+            <span class="step-item active" data-step="1">1. 약관동의</span>
+            <span class="step-item" data-step="2">2. 정보입력</span>
+            <span class="step-item" data-step="3">3. 가입완료</span>
+        </section>
+
+        <form id="signupForm" method="POST" action="{{ url_for('signup') }}">
+            <section class="step step-1 active">
+                <h3 class="section-title">전체동의</h3>
+
+                <div class="checkbox-group">
+                    <label class="all-agree-text">
+                        <input type="checkbox" id="allAgree" />
+                        <span>모든 약관을 확인하고 전체 동의합니다.</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" class="agree required-agree" />
+                        <span>이용약관 동의 (필수)</span>
+                        <a href="#" class="view-detail">전문보기</a>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" class="agree required-agree" />
+                        <span>개인정보 수집 및 이용 동의 (필수)</span>
+                        <a href="#" class="view-detail">전문보기</a>
+                    </label>
+                </div>
+            </section>
+
+            <section class="step step-2">
+                <div class="form-group">
+                    <label for="username">아이디</label>
+                    <input type="text" id="username" name="username" placeholder="아이디 입력" required />
+                    <span class="input-description">영문 소문자/숫자, 4~10자</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호 입력" required />
+                    <span class="input-description">영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10~16자</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">비밀번호 확인</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 재입력" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">이름</label>
+                    <input type="text" id="name" name="name" placeholder="이름 입력" required />
+                </div>
+
+                <div class="form-group">
+                    <label>주소</label>
+                    <label class="sub-label">도/시</label>
+                    <div class="address-group">
+                        <select name="city" id="city" required>
+                            <option value="">도/시 선택</option>
+                            <option value="서울특별시">서울특별시</option>
+                            <option value="경기도">경기도</option>
+                        </select>
+                    </div>
+                    
+                    <label class="sub-label" style="margin-top: 15px;">시/군/구</label>
+                    <div class="address-group">
+                        <select name="district" id="district" required>
+                            <option value="">시/군/구 선택</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>생년월일</label>
+                    <div class="birthdate-group">
+                        <select name="birth_year" required>
+                            <option value="">년</option>
+                            <option value="2005">2005</option>
+                            <option value="2004">2004</option>
+                            <option value="2003">2003</option>
+                            <option value="2002">2002</option>
+                            <option value="2001">2001</option>
+                            <option value="2000">2000</option>
+                            <option value="1999">1999</option>
+                            <option value="1998">1998</option>
+                            <option value="1997">1997</option>
+                            <option value="1996">1996</option>
+                            <option value="1995">1995</option>
+                        </select>
+                        <select name="birth_month" required>
+                            <option value="">월</option>
+                            <option value="1">1월</option>
+                            <option value="2">2월</option>
+                            <option value="3">3월</option>
+                            <option value="4">4월</option>
+                            <option value="5">5월</option>
+                            <option value="6">6월</option>
+                            <option value="7">7월</option>
+                            <option value="8">8월</option>
+                            <option value="9">9월</option>
+                            <option value="10">10월</option>
+                            <option value="11">11월</option>
+                            <option value="12">12월</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step step-2-2">
+                <h3 class="section-title-2">나의 키워드</h3>
+                
+                <div class="form-group keyword-select-group">
+                    <select id="keywordSelect">
+                        <option value="" disabled selected>키워드 선택 (하나씩 선택)</option>
+                        <option value="국가유공자">국가유공자</option>
+                        <option value="아동">아동</option>
+                        <option value="자영업">자영업</option>
+                        <option value="학생(청소년)">학생(청소년)</option>
+                        <option value="청년">청년</option>
+                        <option value="질병">질병</option>
+                        <option value="한부모가정">한부모가정</option>
+                        <option value="취업">취업</option>
+                        <option value="장학금">장학금</option>
+                        <option value="차상위/저소득">차상위/저소득</option>
+                        <option value="장애인">장애인</option>
+                        <option value="교육">교육</option>
+                        <option value="임산부">임산부</option>
+                        <option value="금융">금융</option>
+                        <option value="노인">노인</option>
+                        <option value="거주">거주</option>
+                        <option value="(신혼)부부">(신혼)부부</option>
+                    </select>
+                </div>
+                
+                <div id="selectedKeywordsContainer" class="selected-keywords-container"></div>
+                <input type="hidden" id="keywordsInput" name="keywords" />
+
+                <h3 class="section-title-2" style="margin-top: 50px;">나의 상황</h3>
+                <div class="status-group" id="statusGroup">
+                    <textarea 
+                        id="situation" 
+                        name="situation" 
+                        placeholder='"이번 달 월세가 너무 부담돼요"와 같은 실직, 주거 부담, 의료비 필요, 교육/양육, 긴급 생계 등 직접적인 키워드가 들어갈수록 정확한 결과가 나와요'
+                    ></textarea>
+                    <span class="input-later-btn" id="inputLaterBtn">다음에 입력할게요</span>
+                </div>
+            </section>
+
+            <section class="step step-3">
+                <div class="step-3-content">
+                    <img src="{{ url_for('static', filename='images/done_bok.png') }}" alt="가입 완료 캐릭터" class="complete-image">
+                </div>
+            </section>
+        </form>
+
+        <button type="button" class="login-btn" id="nextBtn">다음</button>
+        <hr />
+        <p class="sns-login-text">SNS 계정으로 로그인</p>
+        <button class="kakao">카카오로 시작하기</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nextButton = document.getElementById('nextBtn');
+            const signupForm = document.getElementById('signupForm');
+            const step1 = document.querySelector('.step-1');
+            const step2 = document.querySelector('.step-2');
+            const step2_2 = document.querySelector('.step-2-2');
+            const step3 = document.querySelector('.step-3');
+            
+            const step1Indicator = document.querySelector('.step-item[data-step="1"]');
+            const step2Indicator = document.querySelector('.step-item[data-step="2"]');
+            const step3Indicator = document.querySelector('.step-item[data-step="3"]');
+
+            const allAgreeCheckbox = document.getElementById('allAgree');
+            const requiredAgrees = document.querySelectorAll('.required-agree');
+            
+            const keywordSelect = document.getElementById('keywordSelect');
+            const selectedKeywordsContainer = document.getElementById('selectedKeywordsContainer');
+            const keywordsInput = document.getElementById('keywordsInput');
+            
+            const inputLaterBtn = document.getElementById('inputLaterBtn');
+            const statusGroup = document.getElementById('statusGroup');
+            const situationTextarea = document.getElementById('situation');
+            
+            const defaultPlaceholder = '"이번 달 월세가 너무 부담돼요"와 같은 실직, 주거 부담, 의료비 필요, 교육/양육, 긴급 생계 등 직접적인 키워드가 들어갈수록 정확한 결과가 나와요';
+
+            let selectedKeywords = [];
+
+            // 전체 동의 체크박스
+            allAgreeCheckbox.addEventListener('change', function() {
+                requiredAgrees.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+            
+            requiredAgrees.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    let allChecked = true;
+                    requiredAgrees.forEach(cb => {
+                        if (!cb.checked) allChecked = false;
+                    });
+                    allAgreeCheckbox.checked = allChecked;
+                });
+            });
+
+            // 키워드 선택
+            function renderKeywords() {
+                selectedKeywordsContainer.innerHTML = '';
+                
+                selectedKeywords.forEach(keyword => {
+                    const tag = document.createElement('div');
+                    tag.classList.add('selected-keyword-tag');
+                    tag.textContent = keyword;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.classList.add('remove-tag-btn');
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '&times;';
+                    
+                    removeBtn.addEventListener('click', function() {
+                        selectedKeywords = selectedKeywords.filter(k => k !== keyword);
+                        renderKeywords();
+                    });
+
+                    tag.appendChild(removeBtn);
+                    selectedKeywordsContainer.appendChild(tag);
+                });
+                
+                keywordsInput.value = selectedKeywords.join(',');
+                keywordSelect.value = "";
+            }
+
+            keywordSelect.addEventListener('change', function() {
+                const selectedKeyword = this.value;
+
+                if (selectedKeyword && !selectedKeywords.includes(selectedKeyword)) {
+                    selectedKeywords.push(selectedKeyword);
+                    renderKeywords();
+                } else if (selectedKeywords.includes(selectedKeyword)) {
+                    alert('이미 선택된 키워드입니다.');
+                    this.value = "";
+                }
+            });
+            
+            // 나의 상황 접기/펼치기
+            inputLaterBtn.addEventListener('click', function() {
+                if (statusGroup.classList.contains('collapsed')) {
+                    statusGroup.classList.remove('collapsed');
+                    situationTextarea.style.minHeight = '150px';
+                    this.textContent = '다음에 입력할게요';
+                    situationTextarea.placeholder = defaultPlaceholder;
+                    situationTextarea.value = '';
+                    situationTextarea.focus();
+                } else {
+                    situationTextarea.style.minHeight = '0';
+                    statusGroup.classList.add('collapsed');
+                    this.textContent = '나의 상황 입력';
+                    situationTextarea.placeholder = '';
+                    situationTextarea.value = '';
+                }
+            });
+
+            // 단계 전환
+            nextButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (step1.classList.contains('active')) {
+                    let allRequiredAgreed = true;
+                    requiredAgrees.forEach(checkbox => { 
+                        if (!checkbox.checked) allRequiredAgreed = false; 
+                    });
+                    
+                    if (allRequiredAgreed) {
+                        step1.classList.remove('active');
+                        step2.classList.add('active');
+                        step1Indicator.classList.remove('active');
+                        step2Indicator.classList.add('active');
+                        nextButton.textContent = '다음';
+                        window.scrollTo(0, 0);
+                    } else {
+                        alert('필수 약관에 모두 동의해야 다음 단계로 이동할 수 있습니다.');
+                    }
+                
+                } else if (step2.classList.contains('active')) {
+                    // 비밀번호 확인
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    
+                    if (password !== confirmPassword) {
+                        alert('비밀번호가 일치하지 않습니다.');
+                        return;
+                    }
+                    
+                    step2.classList.remove('active');
+                    step2_2.classList.add('active');
+                    nextButton.textContent = '다음';
+                    window.scrollTo(0, 0);
+
+                } else if (step2_2.classList.contains('active')) {
+                    step2_2.classList.remove('active');
+                    step3.classList.add('active');
+                    
+                    step2Indicator.classList.remove('active');
+                    step3Indicator.classList.add('active');
+                    
+                    nextButton.textContent = '완료';
+                    window.scrollTo(0, 0);
+                
+                } else if (step3.classList.contains('active')) {
+                    // 폼 제출
+                    signupForm.submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

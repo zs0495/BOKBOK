@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이용 가이드 | bokbok</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    <style>
+        .guide-header {
+            background: #f5f9ff; 
+            border: 1px solid #ddd;
+            padding: 70px 0;      
+            text-align: center;
+            border-left: 0;          
+            border-right: 0;
+        }
+
+        .guide-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .guide-page {
+            max-width: 960px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+        }
+
+        .guide-cards-wrapper {
+            overflow-x: auto;
+            padding-top: 50px; 
+            padding-bottom: 12px; 
+        }
+
+        .guide-cards {
+            display: flex;
+            gap: 24px;
+            width: max-content;
+        }
+
+        .guide-card {
+            flex: 0 0 280px;         
+            background: #fff;
+            padding: 32px;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            box-sizing: border-box;
+        }
+
+        .guide-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 12px;
+        }
+
+        .guide-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 16px;
+        }
+
+        .guide-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .guide-images {
+            margin-top: 60px;
+        }
+
+        .guide-images img {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고">
+            </a>
+        </div>
+        <div class="menu">
+            <ul>
+                <li>
+                    <a href="#">서비스 소개</a>
+                    <ul>
+                        <li><a href="{{ url_for('service_page') }}">서비스 개요</a></li>
+                        <li><a href="{{ url_for('team_page') }}">팀 소개</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">주요 기능</a>
+                    <ul>
+                        <li><a href="{{ url_for('public_page') }}">공공 복지 검색</a></li>
+                        <li><a href="{{ url_for('private_page') }}">민간 복지 검색</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">라운지</a>
+                    <ul>
+                        <li><a href="{{ url_for('library_page') }}">자료실</a></li>
+                        <li><a href="{{ url_for('guide_page') }}">이용 가이드</a></li>
+                        <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="auth">
+            <a href="{{ url_for('signup_form') }}">회원가입</a> | <a href="{{ url_for('login_form') }}">로그인</a>
+        </div>
+    </nav>
+
+    <section class="guide-header">
+        <h2>이용 가이드</h2>
+    </section>
+
+    <main class="guide-page">
+        <section class="guide-cards-wrapper">
+            <div class="guide-cards">
+
+                <div class="guide-card">
+                    <p class="guide-number">01</p>
+                    <p class="guide-title">기본 프로필 입력</p>
+                    <p class="guide-text">
+                        회원가입 시 나이, 거주 지역을 최소한의 정보만 입력하고 가족 구성,
+                        소득 분위 등은 사용자님이 입력 선택 가능하여 프라이버시를 지켜드려요.
+                    </p>
+                </div>
+
+                <div class="guide-card">
+                    <p class="guide-number">02</p>
+                    <p class="guide-title">상황 선택·입력</p>
+                    <p class="guide-text">
+                        복지 매칭을 위해 실직, 주거비 부담, 의료비 필요, 교육/양육,
+                        긴급 생계 등 키워드를 직접 입력하여 매칭률을 높여요.
+                    </p>
+                </div>
+
+                <div class="guide-card">
+                    <p class="guide-number">03</p>
+                    <p class="guide-title">공공 복지 추천받기</p>
+                    <p class="guide-text">
+                        사용자님이 입력한 기본 프로필 정보와 상황에 맞는 공공 복지
+                        혜택을 한 눈에 볼 수 있도록 매칭해드려요.
+                    </p>
+                </div>
+
+                <div class="guide-card">
+                    <p class="guide-number">04</p>
+                    <p class="guide-title">민간 복지 추천받기</p>
+                    <p class="guide-text">
+                        공공 복지 조건에 부합하지 않는 사용자님들을 위해 공공 복지 외에 
+                        재단·협회·비영리단체 프로그램과 대안 프로그램을 매칭해드려요.
+                    </p>
+                </div>
+
+                <div class="guide-card">
+                    <p class="guide-number">05</p>
+                    <p class="guide-title">신청 절차 안내받기</p>
+                    <p class="guide-text">
+                        혜택만 제공해드리는게 아니죠! 혜택별로 신청 단계별 가이드를 제공하여 
+                        두번 알아보는 일이 없도록 했어요.
+                    </p>
+                </div>
+
+                <div class="guide-card">
+                    <p class="guide-number">06</p>
+                    <p class="guide-title">나의 혜택 저장</p>
+                    <p class="guide-text">
+                        맘에 드는 복지는 찜을 해서 마이페이지에서 모아볼 수 있어요.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="guide-images">
+            <img src="{{ url_for('static', filename='images/help_bok.png') }}" alt="이용 가이드 도움말">
+        </section>
+    </main>
+
+    <footer class="footer">
+        © 2025 bokbok. All rights reserved.
+    </footer>
+
+</body>
+</html>

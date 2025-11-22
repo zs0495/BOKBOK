@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>로그인 | bokbok</title>
+    
+    <style>
+    /* 로그인 페이지 레이아웃 스타일 */
+    
+    /* 1. 전체 화면 배경 및 중앙 정렬 */
+    body {
+        background-color: #ffffff; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0 20px;
+    }
+    
+    /* 2. 로그인 컨테이너 */
+    .login-page-container {
+        position: relative;
+        width: 100%;
+        max-width: 440px;
+        padding: 60px 0;
+        text-align: center;
+        margin: 40px 0;
+    }
+
+    /* 3. 뒤로 가기 버튼 */
+    .fixed-top-left {
+        position: fixed;
+        top: 25px;
+        left: 25px;
+        z-index: 100;
+    }
+
+    .back-btn {
+        background: none;
+        border: none;
+        font-size: 36px;
+        color: #333;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    /* 4. 로고 */
+    .login-logo {
+        position: fixed;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 160px;
+        height: auto;
+        z-index: 200; 
+    }
+
+    /* 5. 제목 */
+    .login-page-container h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 40px;
+        margin-top: 30px;
+    }
+    
+    /* 6. 로그인 폼 */
+    .login-form {
+        width: 100%;
+    }
+
+    .login-form input {
+        width: 100%;
+        padding: 14px 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 15px;
+        transition: border-color 0.2s;
+    }
+
+    .login-form input:focus {
+        border-color: #555;
+        outline: none;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: #111;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .login-btn:hover {
+        background: #333;
+    }
+
+    /* 7. 링크 */
+    .login-links {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+    .login-links a {
+        color: #666;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .login-links a:hover {
+        color: #111;
+    }
+
+    /* 8. 구분선 */
+    hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 40px 0 30px;
+    }
+
+    /* 9. SNS 로그인 텍스트 */
+    .sns-login-text {
+        font-size: 13px;
+        color: #777;
+        position: relative;
+        top: -15px;
+        background: #fff;
+        display: inline-block;
+        padding: 0 10px;
+    }
+
+    /* 10. 카카오 버튼 */
+    .kakao {
+        background: #FEE500;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #3A1D1D;
+        cursor: pointer;
+        font-size: 15px;
+        transition: background 0.2s;
+    }
+
+    .kakao:hover {
+        background: #FDD835;
+    }
+
+    /* 11. 메시지 표시 */
+    .message {
+        padding: 12px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .message.error {
+        background-color: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+    }
+
+    .message.success {
+        background-color: #efe;
+        color: #3c3;
+        border: 1px solid #cfc;
+    }
+
+    .message.info {
+        background-color: #eef;
+        color: #33c;
+        border: 1px solid #ccf;
+    }
+    </style>
+</head>
+<body>
+
+    <a href="{{ url_for('index') }}" class="back-btn fixed-top-left">‹</a>
+
+    <div class="login-page-container">
+        
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" class="login-logo">
+        </a>
+
+        <h2>로그인</h2>
+
+        <!-- 메시지 표시 (있을 경우) -->
+        {% if message %}
+        <div class="message {% if '성공' in message %}success{% elif '실패' in message or '오류' in message %}error{% else %}info{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login') }}" class="login-form">
+            <input type="text" name="username" placeholder="아이디를 입력해주세요" required />
+            <input type="password" name="password" placeholder="비밀번호를 입력해주세요" required />
+            <button type="submit" class="login-btn">로그인</button>
+        </form>
+
+        <div class="login-links">
+            <a href="{{ url_for('signup_form') }}">회원가입</a> | <a href="#">아이디·비밀번호 찾기</a>
+        </div>
+        
+        <hr />
+        <p class="sns-login-text">SNS 계정으로 로그인</p>
+
+        <button class="kakao">카카오로 시작하기</button>
+    </div>
+
+</body>
+</html>
