@@ -24,8 +24,8 @@
     .login-page-container {
         position: relative;
         width: 100%;
-        max-width: 440px; /* 최대 너비만 유지하여 내용이 중앙에 모이도록 */
-        padding: 60px 0; /* 좌우 패딩 제거, 상하 패딩만 유지 */
+        max-width: 440px; 
+        padding: 60px 0; 
         text-align: center;
         margin: 40px 0;
     }
@@ -34,7 +34,7 @@
     .back-btn {
         position: absolute;
         top: 25px;
-        left: 0; /* 좌측 끝에 붙도록 조정 */
+        left: 0; 
         background: none;
         border: none;
         font-size: 36px;
@@ -44,10 +44,10 @@
         font-weight: 600;
     }
     .fixed-top-left {
-        position: fixed; /* 뷰포트 기준으로 위치 고정 */
-        top: 25px;       /* 상단에서 25px */
-        left: 25px;      /* 좌측에서 25px */
-        z-index: 100;    /* 다른 요소 위에 보이도록 */
+        position: fixed; 
+        top: 25px;    
+        left: 25px;    
+        z-index: 100;
     }
 
     .back-btn {
@@ -67,7 +67,7 @@
         color: #777;
         position: relative;
         top: -15px; 
-        background: none; /* 배경색 제거 */
+        background: none; 
         display: inline-block;
         padding: 0 10px;
     }
@@ -84,18 +84,18 @@
     /* 나머지 내부 요소 스타일은 그대로 유지 */
 
     .login-logo {
-        position: fixed;  /* 스크롤해도 유지됨 */
+        position: fixed;  
         top: 34px;    
         left: 50%;
-        transform: translateX(-50%); /* 정확한 가로 중앙 정렬 */
-        width: 160px;     /* 로고 크기 */
+        transform: translateX(-50%); 
+        width: 160px;    
         height: auto;
         z-index: 200; 
     }
 
     .login-links a {
-        color: #777;          /* 회색 텍스트 */
-        text-decoration: none; /* 밑줄 제거 */
+        color: #777;        
+        text-decoration: none; 
         font-size: 14px;
     }
 
@@ -117,10 +117,10 @@
         right: 12px;
         top: 50%;
         transform: translateY(-50%);
-        width: 20px;       /* 버튼 크기 지정 */
+        width: 20px;       
         height: 20px;
         background: url("../images/Fermata.png") no-repeat center;
-        background-size: contain;   /* 이미지가 버튼에 맞게 조절됨 */
+        background-size: contain;   
         border: none;
         cursor: pointer;
     }
@@ -166,10 +166,10 @@
             pwInput.type = "password";
         });
 
-        // 2. 로그인 버튼 클릭 이벤트 리스너를 추가합니다.
+        // 2. 로그인 버튼 클릭 이벤트 리스너를 추가
         loginBtn.addEventListener("click", () => {
-        // ⭐ 이 부분이 로그인 성공 후 실행될 페이지 이동 코드입니다.
-        // 실제 서비스에서는 여기에 아이디/비밀번호 유효성 검사 및 서버 통신 코드가 들어갑니다.
+        // 로그인 성공 후 실행될 페이지 이동 코드
+        // 아이디/비밀번호 유효성 검사, 서버 통신 코드
         // **index_LoggedIn.html 페이지로 이동**
         window.location.href = "index_LoggedIn.html"; 
     });

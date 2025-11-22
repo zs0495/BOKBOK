@@ -1567,7 +1567,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 테이블 화면에 표시
     function renderResources(list) {
-        tbody.innerHTML = ""; // 첫 시작 초기화 
+        tbody.innerHTML = ""; 
 
         list.forEach((item) => {
           const tr = document.createElement("tr");
@@ -1586,24 +1586,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 테이블 가져오기
     function loadResources(type) {
-      const lower = type.toLowerCase();   // "PUBLIC" → "public"
+      const lower = type.toLowerCase();   
       const filtered = resourcesData.filter((item) => item.type === lower);
       renderResources(filtered);
     }
 
-    // 버튼 클릭 시
+    // 버튼 클릭
     filterButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        const type = btn.dataset.type; // PUBLIC or PRIVATE
+        const type = btn.dataset.type; 
 
-        // active 스타일 변경
         filterButtons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-        // 데이터 불러오기
         loadResources(type);
       });
     });
 
-    // 처음은 공공으로 뜸
     loadResources("PUBLIC");
 });

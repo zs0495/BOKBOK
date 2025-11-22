@@ -9,10 +9,10 @@
 
     /* 1. 뒤로 가기 버튼 및 로고 */
     .fixed-top-left {
-        position: fixed; /* 뷰포트 기준으로 위치 고정 */
-        top: 25px;       /* 상단에서 25px */
-        left: 25px;      /* 좌측에서 25px */
-        z-index: 100;    /* 다른 요소 위에 보이도록 */
+        position: fixed;
+        top: 25px;     
+        left: 25px;    
+        z-index: 100;   
     }
 
     .back-btn {
@@ -28,11 +28,11 @@
     }
 
     .login-logo {
-        position: fixed;  /* 스크롤해도 유지됨 */
+        position: fixed; 
         top: 25px;        
         left: 50%;
-        transform: translateX(-50%); /* 정확한 가로 중앙 정렬 */
-        width: 160px;     /* 로고 크기 */
+        transform: translateX(-50%); 
+        width: 160px;     
         height: auto;
         z-index: 200; 
     }
@@ -198,7 +198,7 @@
 
     .tooltip-box {
         position: absolute;
-        top: 24px;          /* 아이콘/링크 아래로 */
+        top: 24px;       
         left: 0;
         background: #ffffff;
         border-radius: 16px;
@@ -1874,7 +1874,7 @@
 
     let currentBenefitId = null;
 
-    // 1) 가운데 목록(번호 / 기관명 / 혜택명) 그리기
+    // 1. 가운데 목록(번호 / 기관명 / 혜택명) 
     function renderList() {
         listWrapper.innerHTML = resourcesData.map((item, index) => {
         return `
@@ -1888,7 +1888,7 @@
         }).join('');
     }
 
-    // 2) 왼쪽 사이드바(번호 / 기관명 / 혜택명) 그리기
+    // 2. 왼쪽 사이드바(번호 / 기관명 / 혜택명) 
     function renderSidebar() {
         sidebarUl.innerHTML = resourcesData.map((item, index) => {
         return `
@@ -1901,29 +1901,25 @@
         }).join('');
     }
 
-    // 3) 오른쪽 본문 (필수 서류 리스트) 그리기
+    // 3. 오른쪽 본문 (필수 서류 리스트)
     function renderDocs(benefit) {
     const docs = benefit.requiredDoc || [];
 
-    // word / explain 둘 다 배열도, 문자열도 대응
     const words = Array.isArray(benefit.word) ? benefit.word : benefit.word ? [benefit.word] : [];
     const explains = Array.isArray(benefit.explain) ? benefit.explain : benefit.explain ? [benefit.explain] : [];
 
     docList.innerHTML = docs.map((doc, idx) => {
-        // 기본 텍스트
         const base = typeof doc === 'string' ? doc : (doc.text || '');
 
         const word = words[idx] && words[idx].trim() !== '' ? words[idx] : null;
         const explain = word
-        ? (explains[idx] || explains[0] || '')  // 같은 인덱스 설명, 없으면 첫 번째 설명, 그것도 없으면 빈 문자열
+        ? (explains[idx] || explains[0] || '')  
         : null;
 
-        // 이 서류에 해당 단어가 없으면 그냥 li만
         if (!word) {
         return `<li>${base}</li>`;
         }
 
-        // 해당 인덱스에 word가 있으면 툴팁 붙이기
         return `
         <li>
             ${base}
@@ -1939,7 +1935,7 @@
     }).join('');
     }
 
-    // 공통: 상세로 전환 + 사이드바 active 처리
+    // 4. 상세페이지로 전환 + 사이드바
     function showDetail(benefitId) {
         const benefit = resourcesData.find(b => b.id === benefitId);
         if (!benefit) return;
@@ -1948,7 +1944,6 @@
         detailTitle.textContent = benefit.title;
         renderDocs(benefit);
 
-        // 사이드바 active
         const sidebarItems = sidebarUl.querySelectorAll('li');
         sidebarItems.forEach(li => {
         const id = Number(li.dataset.id);
@@ -1959,9 +1954,7 @@
         detailPage.classList.remove('hidden');
     }
 
-    // 이벤트 바인딩
     function bindEvents() {
-        // 가운데 목록 클릭 → 상세
         const rows = document.querySelectorAll('.doc-row');
         rows.forEach(row => {
         row.addEventListener('click', () => {
@@ -1975,14 +1968,12 @@
         });
         });
 
-        // 왼쪽 사이드바 클릭 → 상세 내용만 변경
         const sidebarItems = sidebarUl.querySelectorAll('li');
         sidebarItems.forEach(item => {
         item.addEventListener('click', () => {
             const id = Number(item.dataset.id);
             showDetail(id);
 
-            // 화면 상단으로 스무스하게 이동
             window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -1991,7 +1982,6 @@
         });
     }
 
-    // 초기 렌더링
     renderList();
     renderSidebar();
     bindEvents();
