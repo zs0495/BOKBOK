@@ -16,8 +16,6 @@ def get_db():
         autocommit=True
     )
 
-
-
 # 나이 구간 정의: (최소, 최대, 라벨)
 AGE_RANGES = [
     (0, 6, "아동"),
@@ -25,7 +23,6 @@ AGE_RANGES = [
     (19, 45, "청년"),
     (60, 100, "노인")
 ]
-
 
 # 키워드 매칭을 위한 사전 (상황 텍스트 → 복지 키워드 매핑)
 SITUATION_KEYWORDS = {
@@ -47,7 +44,6 @@ SITUATION_KEYWORDS = {
     '거주': ['주거', '집', '전세', '월세', '임대', '주택'],
     '(신혼)부부': ['부부', '신혼', '가족', '결혼', '혼인'],
 }
-
 
 def extract_age_range(text):
     """
@@ -81,9 +77,6 @@ def get_age_group_label(age):
     
     return None
 
-
-
-
 # 텍스트에서 키워드 추출 함수
 def extract_keywords_from_situation(situation_text):
     """
@@ -106,10 +99,7 @@ def extract_keywords_from_situation(situation_text):
         if age_label:
             keywords.add(age_label)
 
-    
     return list(keywords)
-
-
 
 # 복지 혜택 매칭 라우트 (공공/민간)
 @app.route('/match_welfare', methods=['POST'])
@@ -133,7 +123,6 @@ def match_welfare():
         situation_text = data.get('situation', '')  # 나의 상황 텍스트
         welfare_type = data.get('type', 'PUBLIC')  # PUBLIC 또는 PRIVATE
         
-        
         # 1. 나이 계산
         current_year = 2025
         if birth_year:
@@ -149,7 +138,6 @@ def match_welfare():
 # 3. 상황 텍스트에서 키워드 추출 (나이 정보 포함)
   situation_keywords = extract_keywords_from_situation(situation_text)
         
-      
 # 4. 모든 키워드 통합 (중복 제거)
   all_keywords = list(set(selected_keywords + age_group_keywords + situation_keywords))
         
@@ -157,7 +145,6 @@ def match_welfare():
   db = get_db()
   cur = db.cursor(pymysql.cursors.DictCursor)
              
-        
    # 기본 쿼리 (공공)
   query = """
   SELECT DISTINCT 
@@ -208,8 +195,6 @@ def match_welfare():
         """, (user_no,))
         liked_benefits = {row['benefit_no'] for row in cur.fetchall()}
         
-
-        
         # 6. 결과 가공
         matched_benefits = []
         for row in results:
@@ -248,14 +233,6 @@ def match_welfare():
     except Exception as e:
         print(f"Error in match_welfare: {e}")
         return jsonify({'error': str(e)}), 500
-
-
-
-
-
-
-
-
 
 # 마이페이지에서 사용자 정보 불러오기
 @app.route('/get_user_info', methods=['GET'])
@@ -313,4 +290,5 @@ def get_user_info():
             return jsonify({'success': False, 'message': 'User not found'}), 404
             
     finally:
+
         db.close()
