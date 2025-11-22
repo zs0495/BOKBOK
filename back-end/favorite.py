@@ -52,14 +52,14 @@ def liked():
             JOIN sites s ON fb.site_id = s.site_id
             JOIN benefits b ON fb.benefit_no = b.benefit_no
             WHERE fb.user_no = %s
-            ORDER BY fb.benefit_no", (user_id,))
+            ORDER BY fb.benefit_no", (user_no, site_name, benefit_title, description))
         liked_raw = cur.fetchall()
         liked_set = {row['benefit_no'] for row in liked_raw}
     finally:
         db.close()
         
     #프론트엔드 (임시)mypage.html 만들면 연결하기 -> 마이페이지
-    return render_template("mypage.html", benefits=benefits, liked_set=liked_set)
+    return render_template("mypage.html",fav.org=site_name, fav.benefits=benefit_title)
 
 
 
@@ -127,6 +127,7 @@ def unlike(benefit_no):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
