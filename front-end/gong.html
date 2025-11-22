@@ -189,23 +189,22 @@
 
         /* 매칭 결과 페이지 스타일 (성공/실패) */
         .result-page {
-            text-align: center; /* 기본은 중앙 정렬 유지 */
+            text-align: center; 
             padding-top: 50px;
             padding-bottom: 80px;
         }
         
-        /* ★★★ 매칭 결과 헤더 (제목+태그+마스코트) 레이아웃 변경 ★★★ */
         .result-header {
-            display: flex; /* Flexbox 적용 */
-            align-items: center; /* 수직 중앙 정렬 */
-            justify-content: space-between; /* 요소들을 양 끝으로 분리 */
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
             margin-bottom: 30px;
-            text-align: left; /* 내부 요소는 왼쪽 정렬을 기본으로 */
+            text-align: left; 
         }
         
         .result-text-group {
-            flex-grow: 1; /* 남은 공간을 차지하도록 */
-            max-width: 70%; /* 마스코트에게 공간을 주기 위해 최대 너비 제한 */
+            flex-grow: 1; 
+            max-width: 70%; 
             margin-right: 15px;
         }
 
@@ -214,20 +213,20 @@
             font-weight: 700;
             color: #333;
             margin-bottom: 10px;
-            text-align: left; /* 제목은 왼쪽 정렬 */
+            text-align: left; 
         }
 
         .result-mascot {
-            width: 100px; /* ★ 마스코트 크기 축소 */
+            width: 100px; 
             height: auto;
-            margin: 0; /* 중앙 정렬 마진 제거 */
+            margin: 0; 
             flex-shrink: 0; 
         }
 
         /* 매칭 성공 시 태그 박스 */
         .tag-box-group {
             display: flex;
-            justify-content: flex-start; /* ★ 태그 그룹 왼쪽 정렬 */
+            justify-content: flex-start; 
             gap: 8px;
             flex-wrap: wrap;
         }
@@ -262,6 +261,7 @@
             position: relative; 
             flex-wrap: wrap; 
             transition: background-color 0.2s;
+            cursor: pointer; /* 클릭 가능 표시 */
         }
         
         .welfare-result-list li.open {
@@ -271,55 +271,62 @@
         .welfare-result-list li:last-child {
             border-bottom: none;
         }
-        
-        /* 리스트 제목 요소 */
-        .list-num, .list-agency, .list-benefit, .list-detail-btn {
-            min-height: 24px; 
-        }
 
+        /* 리스트 제목 요소 */
         .list-num {
             font-weight: 700;
             color: #79A0DF;
             min-width: 30px;
+            flex-shrink: 0;
+            order: 1; /* ★ 순서 지정 */
         }
 
         .list-agency {
-            flex-grow: 1;
+            flex-grow: 0; /* 공간을 차지하지 않고 내용 너비만 사용 */
             text-align: left;
             color: #666;
             margin-left: 10px;
             min-width: 60px;
+            order: 2; /* ★ 순서 지정 */
         }
 
         .list-benefit {
             font-weight: 600;
             color: #333;
-            min-width: 100px;
+            flex-grow: 1; /* ★★★ 남은 공간 모두 차지 (하트를 오른쪽으로 밀어냄) ★★★ */
+            flex-basis: auto; 
             text-align: left;
+            margin: 0;
+            margin-left: 10px; /* 기관명과의 간격 */
+            order: 3; /* ★ 순서 지정: 기관명 다음 */
         }
-
-        /* 상세 버튼 */
-        .list-detail-btn {
+        
+        /* ★★★ 찜 버튼 스타일 수정: 가장 오른쪽에 배치 ★★★ */
+        .list-heart-btn {
             background: none;
-            border: 1px solid #ddd;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #666;
-            font-size: 10px;
-            margin-left: 15px;
+            border: none;
+            color: #111; /* 기본 검은색 */
+            font-size: 18px; 
             cursor: pointer;
-            transition: transform 0.3s;
+            margin-left: 15px; /* 혜택명과의 간격 */
+            flex-shrink: 0;
+            order: 4; /* ★ 순서 지정: 가장 오른쪽 */
+            padding: 0;
         }
         
-        .welfare-result-list li.open .list-detail-btn {
-            transform: rotate(180deg); 
+        /* 기본 빈 하트 (검은색 라인) */
+        .list-heart-btn::before {
+            content: "♡";
         }
         
-        /* --- 상세 내용 영역 (사진에서 펼쳐지는 영역) --- */
+        /* 찜 된 상태 (채워진 하트, #7ca2e0) */
+        .list-heart-btn.liked::before {
+            content: "♥";
+            color: #7ca2e0; 
+        }
+        
+
+        /* --- 상세 내용 영역 (클릭 시 펼쳐지는 영역) --- */
         .list-detail-content {
             width: 100%;
             display: none; 
@@ -327,6 +334,7 @@
             margin-top: 10px;
             border-top: 1px dashed #eee;
             color: #333;
+            order: 5; /* 항상 마지막에 배치 */
         }
 
         /* 상세 내용이 활성화 되었을 때 */
@@ -349,6 +357,7 @@
             font-size: 14px;
             border-bottom: none;
             background-color: transparent;
+            cursor: default; /* 리스트 항목 클릭 이벤트 중복 방지 */
         }
         
         .detail-documents li:before {
@@ -476,8 +485,7 @@
         <div class="welfare-logo">
             
             <a href="index.html">
-                <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" class="login-logo">
-                <!-- <img src="../images/bokbok_typo.png" alt="로고"> -->
+                <img src="../images/bokbok_logo.png" alt="로고">
             </a>
         </div>
         <button id="menuToggle" class="menu-toggle-btn">
@@ -570,17 +578,16 @@
                 <div class="tag-box-group">
                     </div>
             </div>
-            <img src="{{ url_for('static', filename='images/search_bok.png') }}" alt="매칭 성공 캐릭터" class="result-mascot">
-            <!-- <img src="../images/search_bok.png" alt="매칭 성공 캐릭터" class="result-mascot"> -->
+            <img src="../images/search_bok.png" alt="매칭 성공 캐릭터" class="result-mascot">
         </div>
 
         <div class="result-list-container">
             <ul class="welfare-result-list">
-                <li data-benefit-id="benefit-1">
+                <li data-benefit-id="benefit-1" role="button" aria-expanded="false">
                     <span class="list-num">01</span>
                     <span class="list-agency">보건복지부</span>
+                    <button class="list-heart-btn" aria-label="찜하기"></button>
                     <span class="list-benefit">긴급 복지 지원</span>
-                    <button class="list-detail-btn" aria-expanded="false">&#9660;</button>
                     <div class="list-detail-content">
                         <p style="font-size: 14px; margin-bottom: 10px;">"긴급 복지 지원" 혜택 상세 정보:</p>
                         <ul class="detail-documents">
@@ -593,11 +600,11 @@
                         <a href="https://www.bokjiro.go.kr" target="_blank" class="benefit-link">혜택 바로가기</a>
                     </div>
                 </li>
-                <li data-benefit-id="benefit-2">
+                <li data-benefit-id="benefit-2" role="button" aria-expanded="false">
                     <span class="list-num">02</span>
                     <span class="list-agency">서울시</span>
+                    <button class="list-heart-btn" aria-label="찜하기"></button>
                     <span class="list-benefit">청년 월세 지원</span>
-                    <button class="list-detail-btn" aria-expanded="false">&#9660;</button>
                      <div class="list-detail-content">
                         <p style="font-size: 14px; margin-bottom: 10px;">"청년 월세 지원" 혜택 상세 정보:</p>
                         <ul class="detail-documents">
@@ -608,11 +615,11 @@
                         <a href="https://www.bokjiro.go.kr" target="_blank" class="benefit-link">혜택 바로가기</a>
                     </div>
                 </li>
-                 <li data-benefit-id="benefit-3">
+                 <li data-benefit-id="benefit-3" role="button" aria-expanded="false">
                     <span class="list-num">03</span>
                     <span class="list-agency">고용노동부</span>
+                    <button class="list-heart-btn" aria-label="찜하기"></button>
                     <span class="list-benefit">국민취업지원제도</span>
-                    <button class="list-detail-btn" aria-expanded="false">&#9660;</button>
                      <div class="list-detail-content">
                         <p style="font-size: 14px; margin-bottom: 10px;">"국민취업지원제도" 혜택 상세 정보:</p>
                         <ul class="detail-documents">
@@ -627,8 +634,7 @@
 
     <section id="matchFailPage" class="welfare-container result-page">
         <div class="result-header fail-header">
-            <img src="{{ url_for('static', filename='images/crying_bok.png') }}" alt="매칭 실패 캐릭터" class="result-mascot">
-            <!-- <img src="../images/crying_bok.png" alt="매칭 실패 캐릭터" class="result-mascot"> -->
+            <img src="../images/crying_bok.png" alt="매칭 실패 캐릭터" class="result-mascot">
             <p class="fail-message">앗.. 매칭된 공공 복지가 없어요 🥺</p>
             <p class="fail-question">민간 복지 모아보기로 갈까요?</p>
             <button class="fail-action-btn">갈래요!</button>
@@ -648,15 +654,16 @@
             const matchSuccessPage = document.getElementById('matchSuccessPage');
             const matchFailPage = document.getElementById('matchFailPage');
             
-            // ★ 키워드 관련 요소
+            // 키워드 관련 요소
             const keywordSelect = document.getElementById('keywordSelect');
             const selectedKeywordsContainer = document.getElementById('selectedKeywordsContainer');
             const tagBoxGroup = document.querySelector('#matchSuccessPage .tag-box-group');
 
-            // ★ 리스트 상세 보기 버튼
-            const detailButtons = document.querySelectorAll('.list-detail-btn');
+            // ★ 리스트 항목 (li) 전체
+            const listItems = document.querySelectorAll('.welfare-result-list li');
 
-            // ★ 현재 선택된 키워드를 저장하는 배열
+
+            // 현재 선택된 키워드를 저장하는 배열
             let selectedKeywords = [];
 
 
@@ -718,7 +725,7 @@
                 }
             });
             
-            // --- 3. 매칭 결과 전환 기능 (수정된 로직) ---
+            // --- 3. 매칭 결과 전환 기능 ---
 
             // 헬퍼: 매칭 성공 페이지에 키워드 태그 출력
             function renderResultTags() {
@@ -782,26 +789,47 @@
                 window.scrollTo(0, 0); 
             });
             
-            // --- 4. 기타 기능 ---
+            // --- 4. 찜 기능 및 상세 내용 토글 기능 (수정됨) ---
             
-            // 혜택 상세 정보 토글 기능
-            detailButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const listItem = this.closest('li');
-                    
-                    // 현재 열려있는 항목이 있다면 닫기
-                    const currentlyOpen = document.querySelector('.welfare-result-list li.open');
-                    if (currentlyOpen && currentlyOpen !== listItem) {
-                        currentlyOpen.classList.remove('open');
-                        currentlyOpen.querySelector('.list-detail-btn').setAttribute('aria-expanded', 'false');
+            // 혜택 목록 전체 클릭 이벤트 리스너 추가
+            listItems.forEach(item => {
+                // 1. 상세 내용 토글 (li 클릭 시)
+                item.addEventListener('click', function(event) {
+                    // 클릭된 요소가 찜 버튼이 아닌 경우에만 토글 실행
+                    if (!event.target.closest('.list-heart-btn')) {
+                         // 현재 열려있는 항목이 있다면 닫기
+                        const currentlyOpen = document.querySelector('.welfare-result-list li.open');
+                        if (currentlyOpen && currentlyOpen !== item) {
+                            currentlyOpen.classList.remove('open');
+                            currentlyOpen.setAttribute('aria-expanded', 'false');
+                        }
+                        
+                        // 현재 항목 토글
+                        const isExpanded = item.classList.toggle('open');
+                        item.setAttribute('aria-expanded', isExpanded);
                     }
-                    
-                    // 현재 항목 토글
-                    const isExpanded = listItem.classList.toggle('open');
-                    this.setAttribute('aria-expanded', isExpanded);
                 });
-            });
 
+                // 2. 찜 버튼 클릭 이벤트 리스너 추가
+                const heartButton = item.querySelector('.list-heart-btn');
+                if (heartButton) {
+                    heartButton.addEventListener('click', function(e) {
+                        e.stopPropagation(); // li 클릭 이벤트로 전파되는 것 방지
+                        this.classList.toggle('liked');
+
+                        // 찜 상태에 따라 aria-label 변경 (접근성)
+                        if (this.classList.contains('liked')) {
+                            alert('찜 목록에 추가되었습니다.'); // 확인용 알림
+                            this.setAttribute('aria-label', '찜하기 취소');
+                        } else {
+                             alert('찜 목록에서 제거되었습니다.'); // 확인용 알림
+                            this.setAttribute('aria-label', '찜하기');
+                        }
+                    });
+                }
+            });
+            
+            // --- 5. 기타 초기화 기능 ---
 
             // 초기화: 입력 폼만 표시
             inputFormPage.classList.add('active');
