@@ -46,7 +46,7 @@ Team 복복핑
 
 <br>
 
-### 🗃️ 컨벤션 및 깃플로우 전략
+### 🗃️ 컨벤션
 #### 폴더 컨벤션
 
 ```
@@ -85,16 +85,16 @@ Team 복복핑
 ### 👩🏻‍🎨 기획·디자인
 | [김서현]<br/> [@twotthh](https://github.com/twotthh)<br/> |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/64cb01ba-6906-4a70-a137-798ed91d9f66" width="100" height="120"> |
+| <img src="https://github.com/user-attachments/assets/184d8774-6a8c-44b8-b585-ca832839478e" width="100" height="120"> |
 
 ### 🧑🏻‍💻 프론트엔드
 | [김규린]<br/> [@Kimgyurin5111](https://github.com/Kimgyurin5111)<br/> | [박소현]<br/> [@sooooo77](https://github.com/sooooo77)<br/>  |
 | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/89bb1598-afb7-451e-be7e-aef4ba86f0d6" width="100" height="120"> | <img src="https://github.com/user-attachments/assets/82b75e1e-28d8-4ab2-9fa6-a12664a8923d" width="100" height="120"> | 
+| <img src="https://github.com/user-attachments/assets/0b6901c5-35fe-44ff-98d2-48df51926246" width="100" height="120"> | <img src="https://github.com/user-attachments/assets/98dd8e38-2ac5-4213-b640-50aca02a420f" width="100" height="120"> | 
 
 ### 🧑🏻‍💻 백엔드
 | [김소연]<br/> [@zs0495](https://github.com/zs0495)<br/> | [홍소연]<br/> [@sssoyeon25](https://github.com/sssoyeon25)<br/>  |
 | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/5001abf3-cf7f-4a3d-9573-695cdca81c1a" width="100" height="120"> | <img src="https://github.com/user-attachments/assets/50fe0a16-aa1b-4296-aeea-ccf629286bdb" width="100" height="120"> | 
+| <img src="https://github.com/user-attachments/assets/34b73e21-f7e0-4c93-8650-1c72eba2bead" width="100" height="120"> | <img src="https://github.com/user-attachments/assets/8fae212a-dd19-40e2-9a9a-b018f418a0d5" width="100" height="120"> | 
 
 </div>
