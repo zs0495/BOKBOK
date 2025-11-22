@@ -337,6 +337,13 @@
   
   <script src="auth.js"></script>
   <script>
+    // ------------------------------------------------------------------
+    // 🎯 추가된 코드: isLoggedIn 변수 선언 (실제 구현에선 auth.js에서 가져와야 함)
+    // ------------------------------------------------------------------
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // 예시: 로컬 스토리지 확인
+    const isLoggedIn = false; // 🎯 테스트를 위해 강제로 로그아웃(false) 상태 설정
+    // 실제로는 auth.js 파일에서 가져오거나 서버 렌더링 시점에 설정해야 합니다.
+
     const listPage = document.getElementById('listPage');
     const detailPage = document.getElementById('detailPage');
     const rows = document.querySelectorAll('.doc-row');
@@ -405,6 +412,15 @@
     // 목록의 각 행 클릭 시 -> 상세 페이지로
     rows.forEach(row => {
         row.addEventListener('click', () => {
+
+            // 적용된 로그인 접근 제한 기능
+            if (!isLoggedIn) {
+                alert('로그인이 필요한 서비스입니다.');
+                location.href = 'login.html';
+                return;
+            }
+            // ------------------------------------------------------------------
+
             const indexText = row.querySelector('.doc-col-index').textContent.trim(); 
             const benefitKey = `혜택명${indexText}`;  
 
@@ -467,6 +483,5 @@
     });
 
   </script>
-  
 </body>
 </html>
