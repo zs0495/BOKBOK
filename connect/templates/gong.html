@@ -1102,6 +1102,59 @@
                 validateForm(); // 선택 변경 시 해당 오류 메시지를 즉시 숨김
             });
         });
+// 복지 추천 조회 함수
+function sendWelfareRequest() {
+    const data = {
+        username: document.getElementById("username").value,
+        birth_year: document.getElementById("birth_year").value,
+        birth_month: document.getElementById("birth_month").value,
+        city: document.getElementById("city").value,
+        district: document.getElementById("district").value,
+        situation: document.getElementById("situation").value,
+        keywords: [],
+        type: "PUBLIC"
+    };
+
+    fetch("/match_welfare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        const box = document.getElementById("resultBox");
+        if (res.error) {
+            box.innerHTML = "<b>오류:</b> " + res.error;
+            return;
+        }
+        if (!res.matched) {
+            box.innerHTML = "조건에 맞는 복지 혜택이 없습니다.";
+            return;
+        }
+        let html = "<h3>추천된 복지 목록</h3>";
+        res.benefits.forEach(b => {
+            html += `
+                <div style="margin-bottom:15px;">
+                    <b>${b.benefit_title}</b><br>
+                    ${b.description}<br>
+                    <a href="${b.link}" target="_blank">자세히 보기</a>
+                    <br>
+                    <span style="color:#444;font-size:12px;">
+                        ${b.site_name} ${b.is_nationwide ? "(전국)" : ""}
+                        ${b.is_liked ? " ⭐찜됨" : ""}
+                    </span>
+                </div>
+            `;
+        });
+        box.innerHTML = html;
+    })
+    .catch(err => {
+        document.getElementById("resultBox").innerHTML = "서버 오류 발생: " + err;
+    });
+}
+
+// 조회 버튼 클릭 시 위 함수 실행
+document.getElementById('searchButton').addEventListener('click', sendWelfareRequest);
 
         
     });
