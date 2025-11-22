@@ -1375,7 +1375,7 @@ function sendWelfareRequest() {
         if (goToMinWelfareBtn) {
             goToMinWelfareBtn.addEventListener('click', () => {
                 // 2. 버튼 클릭 시 min.html로 이동
-                window.location.href = "{{url_for('min' }}"; 
+                window.location.href = "{{url_for('min') }}"; 
 
 // 조회 버튼 클릭 시 위 함수 실행
 document.getElementById('searchButton').addEventListener('click', sendWelfareRequest);
