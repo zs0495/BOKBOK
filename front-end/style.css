@@ -23,7 +23,7 @@
     z-index: 20;
 }
 
-/* ### 네비게이션 메뉴바 추가 */
+/* 메뉴 전체 */
 .menu {
   font: bold 16px "malgun gothic";
 }
@@ -32,10 +32,12 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex; 
-  gap: 40px;
+
+  display: flex;
+  gap: 48px;
 }
 
+/* 개별 메뉴 항목 */
 .menu > ul > li {
   position: relative;
 }
@@ -43,50 +45,63 @@
 .menu > ul > li > a {
   text-decoration: none;
   color: #333;
-  padding: 16px 0;
+  padding: 20px 0;
   display: inline-block;
 }
 
+/* -------------- */
+/* 드롭다운 메뉴 */
+/* -------------- */
 .menu > ul > li > ul {
-  position: absolute;
-  top: 100%; 
-  left: 50%;
-  transform: translateX(-50%);
+    position: absolute;
+    top: calc(131% - 2px);
+    left: 50%;
+    transform: translateX(-50%);
 
-  display: none; 
+    display: none;
 
-  margin: 0;
-  padding: 24px 32px 72px;
-  list-style: none;
+    margin: 0;
+    padding: 24px 32px 32px;
+    list-style: none;
 
-  min-width: 160px;
-  min-height: 200px;
-  background: #f5f9ff;
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    /* 모든 박스의 너비를 동일하게 고정 */
+    width: 200px; /* 적절한 고정 너비 (예: 200px)로 설정 */
+    /* min-width: 160px; /* 고정 width를 사용하므로 min-width는 필요 없습니다 */
 
-  font-size: 14px;
+    background: #f5f9ff;
+    border-radius: 0 0 0 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+    font-size: 14px;
 }
 
 .menu > ul > li > ul > li {
-  padding: 6px 0;
+    padding: 6px 0;
 }
 
 .menu > ul > li > ul > li > a {
-  text-decoration: none;
-  color: #222;
-  white-space: nowrap; 
+    text-decoration: none;
+    color: #222;
+    /* 드롭다운 항목이 박스 전체 너비를 차지하도록 설정 */
+    display: block; /* 추가: a 태그를 블록 요소로 만들어 전체 너비를 사용 */
+    white-space: nowrap;
+    /* 🎯 항목 글자를 가운데 정렬 */
+    display: block;
+    text-align: center; /* 추가 */
 }
 
+/* hover 하면 열림 */
 .menu > ul > li:hover > ul {
   display: block;
 }
 
+/* 우측 로그인 / 회원가입 */
 .auth a {
     color: #666;
     text-decoration: none;
     font-size: 0.9rem;
 }
+
 
 /* ### 서비스 개요 페이지 추가 */
 .service-page {
