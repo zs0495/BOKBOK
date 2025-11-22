@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>민간 복지 혜택 모아보기 | bokbok</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+<img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" />
     <style>
     /* ---------------------------------------------------- */
     /* 1. 글로벌 및 헤더 스타일 */
@@ -869,7 +871,8 @@
         </div>
         
         <div class="fail-action-group">
-            <button id="goToMinWelfare" class="welfare-submit-btn">공공 복지 혜택 모아보기</button>
+            <a href="{{ url_for('min') }}">민간 복지 혜택 모아보기</a>
+            <form method="POST" action="{{ url_for('min') }}">
             <a href="{{url_for(;index') }}" class="fail-cancel-link">홈으로 돌아갈래요</a> 
         </div>
     </section>
