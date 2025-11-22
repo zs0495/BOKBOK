@@ -107,7 +107,7 @@ def get_user_info():
                 district = parts[1]
         return jsonify({
             'success': True,
-            'name': user['name'],
+            'username': 'username',
             'birth_year': birth_year,
             'birth_month': birth_month,
             'city': city,
@@ -125,7 +125,7 @@ def match_welfare():
     try:
         data = request.get_json()
         user_no = session['user_no']
-        user_name = data.get('username', '')
+        username = data.get('username', '')
         birth_year = data.get('birth_year', '')
         birth_month = data.get('birth_month', '')
         city = data.get('city', '')
