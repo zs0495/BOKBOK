@@ -1,224 +1,166 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>로그인 | bokbok</title>
-    
-    <style>
-    /* 로그인 페이지 레이아웃 스타일 */
-    
-    /* 1. 전체 화면 배경 및 중앙 정렬 */
-    body {
-        background-color: #ffffff; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0 20px;
-    }
-    
-    /* 2. 로그인 컨테이너 */
-    .login-page-container {
-        position: relative;
-        width: 100%;
-        max-width: 440px;
-        padding: 60px 0;
-        text-align: center;
-        margin: 40px 0;
-    }
-
-    /* 3. 뒤로 가기 버튼 */
-    .fixed-top-left {
-        position: fixed;
-        top: 25px;
-        left: 25px;
-        z-index: 100;
-    }
-
-    .back-btn {
-        background: none;
-        border: none;
-        font-size: 36px;
-        color: #333;
-        cursor: pointer;
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    /* 4. 로고 */
-    .login-logo {
-        position: fixed;
-        top: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 160px;
-        height: auto;
-        z-index: 200; 
-    }
-
-    /* 5. 제목 */
-    .login-page-container h2 {
-        font-size: 28px;
-        font-weight: 800;
-        margin-bottom: 40px;
-        margin-top: 30px;
-    }
-    
-    /* 6. 로그인 폼 */
-    .login-form {
-        width: 100%;
-    }
-
-    .login-form input {
-        width: 100%;
-        padding: 14px 15px;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-sizing: border-box;
-        font-size: 15px;
-        transition: border-color 0.2s;
-    }
-
-    .login-form input:focus {
-        border-color: #555;
-        outline: none;
-    }
-
-    .login-btn {
-        width: 100%;
-        padding: 14px;
-        background: #111;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
-        margin-top: 15px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .login-btn:hover {
-        background: #333;
-    }
-
-    /* 7. 링크 */
-    .login-links {
-        margin-top: 20px;
-        font-size: 14px;
-    }
-
-    .login-links a {
-        color: #666;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-
-    .login-links a:hover {
-        color: #111;
-    }
-
-    /* 8. 구분선 */
-    hr {
-        border: none;
-        border-top: 1px solid #ddd;
-        margin: 40px 0 30px;
-    }
-
-    /* 9. SNS 로그인 텍스트 */
-    .sns-login-text {
-        font-size: 13px;
-        color: #777;
-        position: relative;
-        top: -15px;
-        background: #fff;
-        display: inline-block;
-        padding: 0 10px;
-    }
-
-    /* 10. 카카오 버튼 */
-    .kakao {
-        background: #FEE500;
-        border: none;
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        font-weight: 600;
-        color: #3A1D1D;
-        cursor: pointer;
-        font-size: 15px;
-        transition: background 0.2s;
-    }
-
-    .kakao:hover {
-        background: #FDD835;
-    }
-
-    /* 11. 메시지 표시 */
-    .message {
-        padding: 12px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        font-size: 14px;
-    }
-
-    .message.error {
-        background-color: #fee;
-        color: #c33;
-        border: 1px solid #fcc;
-    }
-
-    .message.success {
-        background-color: #efe;
-        color: #3c3;
-        border: 1px solid #cfc;
-    }
-
-    .message.info {
-        background-color: #eef;
-        color: #33c;
-        border: 1px solid #ccf;
-    }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bokbok</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
 
-    <a href="{{ url_for('index') }}" class="back-btn fixed-top-left">‹</a>
-
-    <div class="login-page-container">
-        
-        <a href="{{ url_for('index') }}">
-            <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" class="login-logo">
-        </a>
-
-        <h2>로그인</h2>
-
-        <!-- 메시지 표시 (있을 경우) -->
-        {% if message %}
-        <div class="message {% if '성공' in message %}success{% elif '실패' in message or '오류' in message %}error{% else %}info{% endif %}">
-            {{ message }}
-        </div>
-        {% endif %}
-
-        <form method="POST" action="{{ url_for('login') }}" class="login-form">
-            <input type="text" name="username" placeholder="아이디를 입력해주세요" required />
-            <input type="password" name="password" placeholder="비밀번호를 입력해주세요" required />
-            <button type="submit" class="login-btn">로그인</button>
-        </form>
-
-        <div class="login-links">
-            <a href="{{ url_for('signup_form') }}">회원가입</a> | <a href="#">아이디·비밀번호 찾기</a>
-        </div>
-        
-        <hr />
-        <p class="sns-login-text">SNS 계정으로 로그인</p>
-
-        <button class="kakao">카카오로 시작하기</button>
+  <!-- 네비게이션 -->
+  <nav class="navbar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고">
     </div>
+    <!-- 드롭다운 설정 -->
+    <div class="menu">
+      <ul>
+        <li>
+          <a href="#">서비스 소개</a>
+          <ul>
+            <li><a href="{{ url_for('service_page') }}">서비스 개요</a></li>
+            <li><a href="{{ url_for('team_page') }}">팀 소개</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">주요 기능</a>
+          <ul>
+            <li><a href="{{ url_for('public_page') }}">공공 복지 검색</a></li>
+            <li><a href="{{ url_for('private_page') }}">민간 복지 검색</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">라운지</a>
+          <ul>
+            <li><a href="{{ url_for('library_page') }}">자료실</a></li>
+            <li><a href="{{ url_for('guide_page') }}">이용 가이드</a></li>
+            <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="auth">
+      <a href="{{ url_for('signup_form') }}">회원가입</a> | <a href="{{ url_for('login_form') }}">로그인</a>
+    </div>
+  </nav>
 
+  <section class="hero-wrapper">
+    <div class="hero-slider">
+        <div class="slider-container">
+            <div class="slide slide-1">
+                <div class="slide-content"></div>
+            </div>
+            <div class="slide slide-2">
+                <div class="slide-content"></div>
+            </div>
+            <div class="slide slide-3">
+                <div class="slide-content"></div>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- 바로가기 -->
+  <div class="icon">
+    <a href="#" class="icon-btn">
+      <div class="icon-box">
+        <img src="{{ url_for('static', filename='images/favorite.png') }}" alt="">
+      </div>
+      <span>찜한 복지</span>
+    </a>
+    <a href="#" class="icon-btn">
+      <div class="icon-box">
+        <img src="{{ url_for('static', filename='images/document.png') }}" alt="">
+      </div>
+      <span>필수 서류</span>
+    </a>
+    <a href="{{ url_for('faq_page') }}" class="icon-btn">
+      <div class="icon-box">
+        <img src="{{ url_for('static', filename='images/questionmark.png') }}" alt="">
+      </div>
+      <span>FAQ</span>
+    </a>
+  </div>
+
+  <section class="feature-section">
+    <h2 class="feature-title">지금 당장 클릭 한번으로<br />나에게 딱 맞는 복지 정책을 알아보세요</h2>
+    <div class="card-container">
+      
+      <a href="{{ url_for('gong_benefits_page') }}" class="feature-card public-card">
+        <h3 class="card-title">공공 복지 혜택 모아보기</h3>
+        <p class="card-desc">정부24, 서울복지포털, 복지로, 온통청년의<br />복지 혜택을 찾아볼 수 있어요</p>
+        <span class="card-link">자세히 보기 &gt;</span>
+      </a>
+
+      <a href="{{ url_for('min_benefits_page') }}" class="feature-card private-card">
+        <h3 class="card-title">민간 복지 혜택 모아보기</h3>
+        <p class="card-desc">교보교육재단, 희망나눔온, 이랜드복지재단,<br />우아한사장님살핌기금의 복지 혜택을 찾아볼 수 있어요</p>
+        <span class="card-link">자세히 보기 &gt;</span>
+      </a>
+
+    </div>
+    <p class="feature-remark">
+      단순히 검색이 아닌 필수 서류까지 꼼꼼히!<br />
+      믿음직한 복복이를 경험해보세요
+    </p>
+  </section>
+
+  <section class="notice-section">
+    <h2 class="notice-title">NOTICE</h2>
+    <p class="notice-subtitle">복복 이용가이드와 자주하는 질문들을 모아봤어요</p>
+
+    <div class="notice-scroll-container">
+      
+      <div class="notice-card">
+        <h3 class="card-heading">복복은 정부 공식 서비스 인가요?</h3>
+        <p class="card-text">복복은 정부와 직접적으로 운영되는 서비스는 아니지만, 공공데이터를 기반으로 정확한 복지 정보를 제공합니다. 추후 지자체 및 복지 기관과 협력하여 신뢰성 높은 정보를 지속적으로 업데이트합니다.</p>
+        <span class="card-date">2025-08-02</span>
+      </div>
+
+      <div class="notice-card">
+        <h3 class="card-heading">주민등록번호나 계좌정보를 입력해야 하나요?</h3>
+        <p class="card-text">아닙니다. 복복은 민감한 개인정보를 요구하지 않습니다. 복지 추천에 필요한 최소한의 정보(나이, 거주지역, 가구구성 등)만 선택적으로 입력하면 됩니다.</p>
+        <span class="card-date">2025-09-21</span>
+      </div>
+      
+      <div class="notice-card">
+        <h3 class="card-heading">복복이가 실제 신청까지 대신 해주나요?</h3>
+        <p class="card-text">복복은 사용자가 직접 신청할 수 있도록 신청 절차·서류·링크를 안내합니다. 자동으로 신청을 대행하진 않지만, 신청 과정을 이해하기 쉽게 단계별로 도와드립니다.</p>
+        <span class="card-date">2025-11-02</span>
+      </div>
+      
+      <div class="notice-card">
+        <h3 class="card-heading">복복에서 제공하는 정보는 어디서 가져오나요?</h3>
+        <p class="card-text">복복은 정부·지자체의 공개 데이터, 공식 복지 사이트 정보, 민간단체·재단의 지원 프로그램 등을 기반으로 정보를 직접 정리하여 제공합니다. 정보 출처는 공신력 있는 기관이지만, 서비스 자체는 공식 기관과는 독립적으로 운영됩니다.</p>
+        <span class="card-date">2025-11-15</span>
+      </div>
+
+      <div class="notice-card">
+        <h3 class="card-heading">복복의 정보는 최신 정책을 반영하나요?</h3>
+        <p class="card-text">네, 복복은 정기적으로 데이터베이스를 업데이트하여 정부·지자체·민간 복지 정보를 가능한 최신 상태로 유지하고 있습니다. 또한 향후 자동 업데이트 시스템을 통해 새로운 정책이나 변경 사항도 신속하게 반영될 수 있도록 확장할 계획입니다.</p>
+        <span class="card-date">2025-11-18</span>
+      </div>
+
+      <div class="notice-card guide-card">
+        <p class="guide-text">복복 A to Z : 복복을 200% 활용하는 방법!</p>
+        <a href="{{ url_for('guide_page') }}" class="guide-link">이용 가이드 바로가기 &gt;</a>
+      </div>
+      
+    </div>
+  </section>
+
+  <section class="bottom-banner-section">
+    <div class="bottom-banner-image">
+        <img src="{{ url_for('static', filename='images/guide.png') }}" alt="복복이가 알려주는 복지 가이드">
+    </div>
+  </section>
+
+  <footer class="footer">
+    © 2025 bokbok. All rights reserved.
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <!-- <script src="auth.js"></script>  로그인 구현-->
 </body>
 </html>
