@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공공 복지 찾기</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .nav {
+            background-color: #4A2DB6;
+            padding: 15px;
+            color: white;
+            font-size: 20px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .input-box {
+            margin-bottom: 15px;
+        }
+        input {
+            width: 250px;
+            padding: 10px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #4A2DB6;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        #resultBox {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f4f4f8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="nav">공공 복지 자동 매칭</div>
+
+    <div class="container">
+
+        <div class="input-box">
+            <label>이름</label><br>
+            <input type="text" id="username">
+        </div>
+
+        <div class="input-box">
+            <label>출생 연도</label><br>
+            <input type="text" id="birth_year" placeholder="예: 1998">
+        </div>
+
+        <div class="input-box">
+            <label>출생 월</label><br>
+            <input type="text" id="birth_month" placeholder="예: 08">
+        </div>
+
+        <div class="input-box">
+            <label>거주 시/도</label><br>
+            <input type="text" id="city" placeholder="예: 서울특별시">
+        </div>
+
+        <div class="input-box">
+            <label>거주 시/군/구</label><br>
+            <input type="text" id="district" placeholder="예: 강남구">
+        </div>
+
+        <div class="input-box">
+            <label>현재 상황 또는 고민</label><br>
+            <input type="text" id="situation" placeholder="예: 실직해서 지원금 필요">
+        </div>
+
+        <button onclick="sendWelfareRequest()">복지 조회하기</button>
+
+        <div id="resultBox"></div>
+
+    </div>
+
+<script>
+function sendWelfareRequest() {
+
+    const data = {
+        username: document.getElementById("username").value,
+        birthy_ear: document.getElementById("birth_year").value,   // 파이썬 코드의 오타 그대로
+        birth_month: document.getElementById("birth_month").value,
+        city: document.getElementById("city").value,
+        district: document.getElementById("district").value,
+        situation: document.getElementById("situation").value,
+        keywords: [],                // 선택 키워드 UI 없음 → 빈 배열 전송
+        type: "PUBLIC"               // 기본값
+    };
+
+    fetch("/match_welfare", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        const box = document.getElementById("resultBox");
+
+        if (res.error) {
+            box.innerHTML = "<b>오류:</b> " + res.error;
+            return;
+        }
+
+        if (!res.matched) {
+            box.innerHTML = "조건에 맞는 복지 혜택이 없습니다.";
+            return;
+        }
+
+        let html = "<h3>추천된 복지 목록</h3>";
+
+        res.benefits.forEach(b => {
+            html += `
+                <div style="margin-bottom:15px;">
+                    <b>${b.benefit_title}</b><br>
+                    ${b.description}<br>
+                    <a href="${b.link}" target="_blank">자세히 보기</a>
+                </div>
+            `;
+        });
+
+        box.innerHTML = html;
+    })
+    .catch(err => {
+        document.getElementById("resultBox").innerHTML = "서버 오류 발생: " + err;
+    });
+}
+</script>
+
+</body>
+</html>
