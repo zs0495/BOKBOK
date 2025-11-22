@@ -389,8 +389,8 @@
     requiredDoc: ["지원서", "재학증명서", "성적증명서", "자기소개서 및 학업/진로 계획서", "정보보호 및 관련 분야 활동 증빙자료", "개인정보 제공 및 활용 동의서 등 (대학 담당 부서에 제출)"],
     keywords: "전남 / 5 청년 8 취업 / 9 장학금",
     link: "",
-    word: "정보보호 및 관련 분야 활동 증빙자료",
-    explain: "교육 및 훈련 자료, 기술적 증빙자료 등"
+    word:   ["", "", "", "", "정보보호 및 관련 분야 활동 증빙자료", ""],
+    explain:["", "", "", "", "교육 및 훈련 자료, 기술적 증빙자료 등", ""]
     },
     {
     id: 8,
@@ -1904,28 +1904,26 @@
     // 3) 오른쪽 본문 (필수 서류 리스트) 그리기
     function renderDocs(benefit) {
     const docs = benefit.requiredDoc || [];
-    const hasWord = benefit.word && benefit.word.trim() !== "";
-    const word = benefit.word;
-    const explain = benefit.explain;
 
-    docList.innerHTML = docs.map(doc => {
-        // 기본 텍스트 부분
-        let base = '';
+    // word / explain 둘 다 배열도, 문자열도 대응
+    const words = Array.isArray(benefit.word) ? benefit.word : benefit.word ? [benefit.word] : [];
+    const explains = Array.isArray(benefit.explain) ? benefit.explain : benefit.explain ? [benefit.explain] : [];
 
-        // 단순 문자열일 때
-        if (typeof doc === 'string') {
-        base = doc;
-        } else if (!doc.tooltipTitle) {
-        // 예전에 쓰던 객체 형태도 호환
-        base = doc.text;
-        }
+    docList.innerHTML = docs.map((doc, idx) => {
+        // 기본 텍스트
+        const base = typeof doc === 'string' ? doc : (doc.text || '');
 
-        // word가 없으면 그냥 li만
-        if (!hasWord) {
+        const word = words[idx] && words[idx].trim() !== '' ? words[idx] : null;
+        const explain = word
+        ? (explains[idx] || explains[0] || '')  // 같은 인덱스 설명, 없으면 첫 번째 설명, 그것도 없으면 빈 문자열
+        : null;
+
+        // 이 서류에 해당 단어가 없으면 그냥 li만
+        if (!word) {
         return `<li>${base}</li>`;
         }
 
-        // word가 있을 때: ? + 단어 + 설명 툴팁 붙이기
+        // 해당 인덱스에 word가 있으면 툴팁 붙이기
         return `
         <li>
             ${base}
