@@ -482,6 +482,14 @@
             text-decoration: none;
         }
 
+        .error-msg {
+            font-size: 12px;
+            color: #e53935;   /* 빨간색 */
+            margin-top: 4px;
+            min-height: 16px; /* 레이아웃 덜 흔들리게 */
+        }
+
+
     </style>
 </head>
 <body>
@@ -515,13 +523,16 @@
     <section id="inputFormPage" class="welfare-container active">
         <h2 class="welfare-title">공공 복지 혜택 모아보기</h2>
         
-        <form id="welfareForm">
+        <form id="welfareForm" novalidate>
+            <!-- 이름 -->
             <div class="form-group-welfare">
                 <label for="userName">이름</label>
                 <input type="text" id="userName" placeholder="복복이" required/> 
                 <button type="button" class="fetch-info-btn">입력 정보 불러오기</button>
+                <div class="error-msg" id="userNameError"></div>
             </div>
 
+            <!-- 생년월일 -->
             <div class="form-group-welfare">
                 <label>생년월일</label>
                 <div class="input-group-inline">
@@ -532,8 +543,10 @@
                         <select name="birthMonth" required><option value="" disabled selected>월</option></select>
                     </div>
                 </div>
+                <div class="error-msg" id="birthError"></div>
             </div>
 
+            <!-- 주소 -->
             <div class="form-group-welfare">
                 <label>주소</label>
                 <div class="input-group-inline">
@@ -543,7 +556,8 @@
                     <div class="address-input-group">
                         <select name="district" required><option value="" disabled selected>시/군/구</option></select>
                     </div>
-                </div>
+                </div> 
+                <div class="error-msg" id="addressError"></div>
             </div>
 
             <div class="form-group-welfare keyword-select-group" style="align-items: flex-start;">
@@ -718,6 +732,11 @@
             const yearSelect = document.querySelector('select[name="birthYear"]');
             const monthSelect = document.querySelector('select[name="birthMonth"]');
 
+            const userNameInput = document.getElementById('userName');
+            const userNameError = document.getElementById('userNameError');
+            const birthError = document.getElementById('birthError');
+            const addressError = document.getElementById('addressError');
+
             let selectedKeywords = [];
 
             // --- 1. 메뉴 토글 ---
@@ -808,6 +827,41 @@
             // --- 5. 폼 제출 ---
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+
+                // --- 1) 에러 초기화 ---
+                userNameError.textContent = '';
+                birthError.textContent = '';
+                addressError.textContent = '';
+
+                let isValid = true;
+
+                // --- 2) 이름 검증 ---
+                if (!userNameInput.value.trim()) {
+                    userNameError.textContent = '이름을 입력해주세요.';
+                    isValid = false;
+                }
+
+                // --- 3) 생년월일 검증 (년/월 둘 다 선택) ---
+                if (!yearSelect.value || !monthSelect.value) {
+                    birthError.textContent = '생년과 월을 모두 선택해주세요.';
+                    isValid = false;
+                }
+
+                // --- 4) 주소 검증 (도/시 + 시/군/구 둘 다 선택) ---
+                if (!citySelectBox.value || !districtSelectBox.value) {
+                    addressError.textContent = '도/시와 시/군/구를 모두 선택해주세요.';
+                    isValid = false;
+                }
+
+                // --- 5) 잘못된 게 있으면 여기서 끝내고 위에 머물기 ---
+                if (!isValid) {
+                    const firstError = document.querySelector('.error-msg:not(:empty)');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    return;
+                }
+
                 inputFormPage.classList.remove('active');
                 matchSuccessPage.classList.remove('active');
                 matchFailPage.classList.remove('active');
