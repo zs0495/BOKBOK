@@ -89,9 +89,7 @@
             font-weight: 700;
         }
 
-        /* -------------------
-        * 입력 폼 및 결과 페이지 공통 스타일
-        * ------------------- */
+        /* 입력 폼 및 결과 페이지 공통 스타일 */
         .welfare-container {
             max-width: 440px;
             margin: 0 auto;
@@ -189,9 +187,7 @@
             transition: background 0.2s;
         }
 
-        /* -------------------
-        * 매칭 결과 페이지 스타일 (성공/실패)
-        * ------------------- */
+        /* 매칭 결과 페이지 스타일 (성공/실패) */
         .result-page {
             text-align: center; /* 기본은 중앙 정렬 유지 */
             padding-top: 50px;
@@ -478,7 +474,11 @@
 
     <header class="welfare-page-header">
         <div class="welfare-logo">
-            <a href="index.html"><img src="../images/bokbok_typo.png" alt="로고"></a>
+            
+            <a href="index.html">
+                <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" class="login-logo">
+                <!-- <img src="../images/bokbok_typo.png" alt="로고"> -->
+            </a>
         </div>
         <button id="menuToggle" class="menu-toggle-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -570,7 +570,8 @@
                 <div class="tag-box-group">
                     </div>
             </div>
-            <img src="../images/search_bok.png" alt="매칭 성공 캐릭터" class="result-mascot">
+            <img src="{{ url_for('static', filename='images/search_bok.png') }}" alt="매칭 성공 캐릭터" class="result-mascot">
+            <!-- <img src="../images/search_bok.png" alt="매칭 성공 캐릭터" class="result-mascot"> -->
         </div>
 
         <div class="result-list-container">
@@ -626,7 +627,8 @@
 
     <section id="matchFailPage" class="welfare-container result-page">
         <div class="result-header fail-header">
-            <img src="../images/crying_bok.png" alt="매칭 실패 캐릭터" class="result-mascot">
+            <img src="{{ url_for('static', filename='images/crying_bok.png') }}" alt="매칭 실패 캐릭터" class="result-mascot">
+            <!-- <img src="../images/crying_bok.png" alt="매칭 실패 캐릭터" class="result-mascot"> -->
             <p class="fail-message">앗.. 매칭된 공공 복지가 없어요 🥺</p>
             <p class="fail-question">민간 복지 모아보기로 갈까요?</p>
             <button class="fail-action-btn">갈래요!</button>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">혜택별 필수 서류 | bokbok</title>
+    <link rel="stylesheet" href="style.css" /> 
+    <style>
+        /* 공통 레이아웃 & 스타일 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f7f9fc;
+        }
+
+        .page-container {
+            max-width: 800px; 
+            width: 100%;
+            margin: 0 auto;
+            flex-grow: 1;
+            padding: 0 0 80px;
+        }
+        
+        /* 혜택 목록 페이지 (스크린샷 1의 모바일 크기) */
+        #listPageContainer {
+            max-width: 440px; 
+            margin: 0 auto;
+            padding: 0 0 80px;
+        }
+
+        /* 뒤로 가기 및 로고 */
+        .page-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 30px 20px;
+        }
+
+        .page-header .back-btn {
+            position: absolute;
+            left: 20px;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+            padding: 5px; 
+        }
+
+        .page-header .logo img {
+            width: 120px; /* 로고 크기 */
+        }
+
+        /* 제목 */
+        .page-title-text {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 혜택 목록 리스트 스타일 (스크린샷 1 디자인 재구성) */
+        .benefit-list-container {
+            background-color: white;
+            padding: 0 20px;
+            border-top: 1px solid #eee; 
+        }
+        
+        .benefit-list-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        
+        .benefit-list-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .benefit-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .benefit-list-item a {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .col-num { 
+            width: 30px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            color: #79A0DF; 
+            flex-shrink: 0; 
+            margin-right: 15px; 
+        }
+        
+        .benefit-info {
+            display: flex;
+            flex-direction: column; 
+            flex-grow: 1;
+        }
+
+        .col-agency { 
+            font-size: 13px; 
+            color: #999; 
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .col-benefit { 
+            font-size: 16px; 
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 화살표 아이콘 */
+        .arrow-icon { 
+            font-size: 18px; 
+            color: #ccc; 
+            font-weight: 700; 
+            flex-shrink: 0; 
+            margin-left: 10px;
+        }
+
+        /* 상세 페이지 스타일 (스크린샷 2 & 3) */
+        #detailPageContainer {
+            display: none; 
+        }
+
+        /* 상세 페이지 레이아웃 (좌: 목록, 우: 상세) */
+        .detail-layout {
+            display: flex;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* 왼쪽 혜택 목록 */
+        .detail-side-menu {
+            width: 250px;
+            background-color: #f0f5ff; 
+            padding: 20px 0;
+            border-right: 1px solid #eee;
+            flex-shrink: 0;
+            overflow-y: auto; 
+        }
+
+        .detail-side-menu ul { list-style: none; padding: 0; margin: 0; }
+        .detail-side-menu li {
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+        }
+        
+        .detail-side-menu li a {
+            text-decoration: none;
+            color: #666;
+            display: flex;
+            flex-direction: column; 
+            width: 100%;
+        }
+
+        /* 선택된 혜택 강조 스타일 */
+        .detail-side-menu li.selected {
+            background-color: #79A0DF; 
+            font-weight: 600;
+        }
+        
+        .detail-side-menu li.selected a {
+            color: white; 
+        }
+        
+        .detail-side-menu .list-agency { font-size: 13px; }
+        .detail-side-menu .list-benefit { font-size: 16px; font-weight: 600; }
+
+        .detail-side-menu li.selected .list-agency {
+            color: white; 
+        }
+
+        /* 오른쪽 상세 내용 */
+        .detail-content {
+            flex-grow: 1;
+            padding: 40px 30px 60px;
+            overflow-y: auto; 
+        }
+        
+        .detail-content h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* 서류 목록 및 도움말 스타일 */
+        .document-list { list-style: none; padding: 0; }
+        .document-list li {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 20px;
+        }
+        .document-list li strong { font-weight: 600; }
+        .document-list li:before { content: "•"; color: #79A0DF; font-weight: 900; position: absolute; left: 0; }
+        .help-trigger {
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 5px;
+            display: inline-block;
+            vertical-align: middle;
+            text-decoration: underline; 
+        }
+        .help-box {
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            width: 80%; 
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            display: none; 
+            position: relative;
+        }
+        .help-box.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pageContainer" class="page-container">
+        
+        <header class="page-header">
+            <a href="index.html" id="backBtn" class="back-btn">&lt;</a>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" class="login-logo">
+                    <!-- <img src="../images/bokbok_typo.png" alt="bokbok 로고"> -->
+                </a>
+            </div>
+        </header>
+        
+        <section id="listPageContainer" class="active">
+            <h2 class="page-title-text">혜택별 필수 서류</h2>
+            
+            <div id="listContent" class="benefit-list-container">
+                </div>
+        </section>
+
+        <section id="detailPageContainer">
+            <div class="detail-layout">
+                
+                <aside class="detail-side-menu">
+                    <ul id="detailBenefitList">
+                        </ul>
+                </aside>
+                
+                <section class="detail-content">
+                    <h2 id="benefitTitle"></h2>
+                    
+                    <ul class="document-list" id="documentDetailList">
+                        <li>
+                            <strong>필수 서류 1: 신분증 사본</strong>
+                        </li>
+                        <li>
+                            <strong>필수 서류 2: 소득 금액 증명원</strong>
+                        </li>
+                        <li>
+                            <strong>필수 서류 3: 건강보험료 납부확인서</strong>
+                        </li>
+                        <li>
+                            <strong>필수 서류 4: 임대차 계약서</strong> 
+                        </li>
+                        <li>
+                            <strong>필수 서류 5:</strong> <span class="help-trigger" data-help-id="help5">부양의무자 재산가액_</span>
+                            <div id="help5" class="help-box">
+                                **[설명글]** 부양의무자 기준이 적용되는 혜택인 경우에만 제출하며, 해당 재산에 대한 증빙 서류가 필요합니다.
+                            </div>
+                        </li>
+                        <li>
+                            <strong>필수 서류 6: 가족관계증명서</strong>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // --- 혜택 데이터 ---
+        const BENEFITS = [
+            { id: '1', name: '긴급생계지원금', agency: '보건복지부' },
+            { id: '2', name: '자녀장려금', agency: '국세청' },
+            { id: '3', name: '영유아 보육료 지원', agency: '지방자치단체' },
+            { id: '4', name: '청년 월세 한시 특별지원', agency: '국토교통부' },
+            { id: '5', name: '문화누리카드', agency: '한국문화예술위원회' },
+            { id: '6', name: '근로장려금', agency: '국세청' }, 
+        ];
+
+        // --- DOM 요소 정의 ---
+        const listPage = document.getElementById('listPageContainer');
+        const detailPage = document.getElementById('detailPageContainer');
+        const listContent = document.getElementById('listContent');
+        const detailBenefitList = document.getElementById('detailBenefitList');
+        const benefitTitle = document.getElementById('benefitTitle');
+        const backBtn = document.getElementById('backBtn');
+        const pageTitle = document.getElementById('page-title');
+
+
+        /* 혜택 목록 페이지 (스크린샷 1)를 렌더링합니다.
+         */
+        function renderListPage() {
+            listContent.innerHTML = ''; 
+
+            BENEFITS.forEach(benefit => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('benefit-list-item');
+                
+                itemDiv.addEventListener('click', () => showDetailPage(benefit.id));
+
+                itemDiv.innerHTML = `
+                    <a href="#" onclick="event.preventDefault()">
+                        <span class="col-num">${benefit.id}</span>
+                        <div class="benefit-info">
+                            <span class="col-agency">${benefit.agency}</span>
+                            <span class="col-benefit">${benefit.name}</span>
+                        </div>
+                        <span class="arrow-icon">&gt;</span>
+                    </a>
+                `;
+                listContent.appendChild(itemDiv);
+            });
+            
+            // 목록 페이지 상태 설정
+            listPage.style.display = 'block';
+            detailPage.style.display = 'none';
+            document.querySelector('.page-title-text').textContent = '혜택별 필수 서류';
+            pageTitle.textContent = '혜택별 필수 서류 목록 | bokbok';
+            
+            // 목록 화면일 때 뒤로 가기 버튼: index.html로 이동
+            backBtn.href = 'index.html'; 
+            backBtn.onclick = null; 
+        }
+
+        /* 혜택 상세 페이지 (스크린샷 2, 3)를 보여주고 데이터를 업데이트합니다. */
+        function showDetailPage(id) {
+            const selectedBenefit = BENEFITS.find(b => b.id === id);
+
+            if (!selectedBenefit) {
+                renderListPage(); 
+                return;
+            }
+
+            // 1. 페이지 구조 표시 전환
+            listPage.style.display = 'none';
+            detailPage.style.display = 'block';
+            
+            // 2. 제목 업데이트
+            benefitTitle.textContent = selectedBenefit.name;
+            document.querySelector('.page-title-text').textContent = ''; 
+            pageTitle.textContent = selectedBenefit.name + ' 상세 서류 | bokbok';
+            
+            // 3. 상세 화면일 때 뒤로 가기 버튼: 목록 화면으로 돌아가기
+            backBtn.href = '#';
+            backBtn.onclick = (e) => {
+                e.preventDefault();
+                renderListPage();
+            };
+            
+            // 4. 왼쪽 상세 목록 렌더링 및 강조 (스크린샷 2)
+            renderDetailList(id);
+            
+            // 5. 물음표 토글 이벤트 재연결
+            attachHelpTriggerEvents();
+            
+            window.scrollTo(0, 0); 
+        }
+
+        /**
+         * 상세 페이지의 왼쪽 메뉴를 렌더링하고 선택 항목을 강조합니다.
+         */
+        function renderDetailList(selectedId) {
+            detailBenefitList.innerHTML = '';
+            
+            BENEFITS.forEach(benefit => {
+                const listItem = document.createElement('li');
+                
+                if (benefit.id === selectedId) {
+                    listItem.classList.add('selected');
+                }
+                
+                listItem.addEventListener('click', () => showDetailPage(benefit.id));
+
+                // 상세 메뉴도 혜택명/기관명을 세로로 표시
+                listItem.innerHTML = `
+                    <a href="#" onclick="event.preventDefault()">
+                        <span class="list-agency">${benefit.agency}</span>
+                        <span class="list-benefit">${benefit.name}</span>
+                    </a>
+                `;
+                
+                detailBenefitList.appendChild(listItem);
+            });
+        }
+        
+        /**
+         * 물음표(?) 텍스트 토글 이벤트 리스너를 연결합니다.
+         */
+        function attachHelpTriggerEvents() {
+            const helpTriggers = document.querySelectorAll('.help-trigger');
+
+            helpTriggers.forEach(trigger => {
+                trigger.onclick = function() {
+                    const helpId = this.getAttribute('data-help-id');
+                    const helpBox = document.getElementById(helpId);
+                    
+                    if (helpBox) {
+                        // 다른 열린 박스는 모두 닫기
+                        document.querySelectorAll('.help-box.visible').forEach(box => {
+                            if (box.id !== helpId) {
+                                box.classList.remove('visible');
+                            }
+                        });
+
+                        // 현재 박스 토글
+                        helpBox.classList.toggle('visible');
+                    }
+                };
+            });
+        }
+
+
+        // --- 초기화 ---
+        document.addEventListener('DOMContentLoaded', function() {
+            renderListPage();
+        });
+    </script>
+</body>
+</html>
