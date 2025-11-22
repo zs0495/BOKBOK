@@ -19,10 +19,10 @@ def get_db():
 #마이페이지 라우트
 @app.route('/mypage')
 def mypage():
-    if 'user_id' not in session:
+    if 'user_no' not in session:
         return redirect('/login')
 
-    user_id = session['user_id']
+    user_id = session['user_no']
     db = get_db()
     try:
         cur = db.cursor(pymysql.cursors.DictCursor)
@@ -39,10 +39,10 @@ def mypage():
        #찜한 항목
 @app.route('/liked')
 def liked():
-    if 'user_id' not in session:
+    if 'user_no' not in session:
         return redirect('/login')
 
-    user_id = session['user_id']
+    user_id = session['user_no']
     db = get_db()
     try:
         cur = db.cursor(pymysql.cursors.DictCursor)
@@ -68,24 +68,32 @@ def liked():
 #찜하기 라우트
 @app.route('/like/<int:benefit_no>')
 def like(benefit_no):
-    if 'user_id' not in session:
+    if 'user_no' not in session:
         return redirect('/login')
-
-    user_id = session['user_id']
-
+    user_no = session['user_no']
     db = get_db()
+
+    
     try:
+    
+    # benefit_no로 site_id 조회
+     cur.execute("SELECT site_id FROM benefits WHERE benefit_no=%s", (benefit_no,))
+        result = cur.fetchone()
+        if not result:
+            # 혜택이 DB에 없을 경우 예외처리
+            return redirect('/mypage')
+        site_id = result[0]
         cur = db.cursor()
 
         # 이미 찜한 상태인지 확인
-        cur.execute("SELECT * FROM liked_benefits WHERE id=%s AND benefit_no=%s",
-                    (user_id, benefit_no))
+        cur.execute("SELECT * FROM favorite_benefits WHERE user_no=%s AND benefit_no=%s",
+                    (user_no, benefit_no))
         exists = cur.fetchone()
 
         if not exists: #찜한 상태가 아니라면
             # 찜하기 목록에 추가
             cur.execute("INSERT INTO favorite_benefit(user_no, benefit_no, site_id)
-                VALUES(%s, %s, %s)", (user_id, benefit_no))
+                VALUES(%s, %s, %s)", (user_no, benefit_no, site_id))
 
     finally:
         db.close()
@@ -96,18 +104,18 @@ def like(benefit_no):
 #찜하기 취소 라우트
 @app.route('/unlike/<int:benefit_no>')
 def unlike(benefit_no):
-    if 'user_id' not in session:
+    if 'user_no' not in session:
         return redirect('/login')
 
-    user_id = session['user_id']
+    user_no = session['user_no']
 
     db = get_db()
     try:
         cur = db.cursor()
 
         #이미 찜했으면 찜하기 취소
-        cur.execute("DELETE FROM favorite_benefit WHERE id=%s AND benefit_no=%s",
-                    (user_id, benefit_no))
+        cur.execute("DELETE FROM favorite_benefit WHERE user_no=%s AND benefit_no=%s",
+                    (user_no, benefit_no))
 
     finally:
         db.close()
@@ -119,6 +127,7 @@ def unlike(benefit_no):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
