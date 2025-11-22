@@ -93,10 +93,23 @@
 
     /* 4. 찜한 복지 영역  */
     .fav-list {
-    width: 100%;
+    display: flex;
     padding: 16px 20px 10px;
     margin-top: 8px;
     }
+
+    .fav-left {
+    width: 26%;
+    padding: 10px 0;
+  }
+
+  .fav-left-title {
+    font-size: 16px;
+  }
+
+  .fav-right {
+    flex: 1;
+  }
 
     .fav-row {
     display: table;
@@ -205,26 +218,29 @@
     <hr />
 
     <section class="fav-list">
+    <div class="fav-left">
+      <div class="fav-left-title">찜한 복지</div>
+    </div>
+
+    <div class="fav-right">
     <div class="fav-row">
-        <div class="fav-title-cell">찜한 복지</div>
-        <!-- 예시 데이터 (나중에 백엔드 연결하면 삭제) -->
-        <div class="fav-cell">서울시청</div>
-        <div class="fav-cell">청년 월세 지원</div>
-        <div class="fav-heart"></div>
+      <div class="fav-cell">서울시청</div>
+      <div class="fav-cell">청년 월세 지원</div>
+      <div class="fav-heart liked"></div>
     </div>
 
     <div class="fav-row">
-        <div class="fav-title-cell"></div>
-        <div class="fav-cell">보건복지부</div>
-        <div class="fav-cell">긴급 복지 지원</div>
-        <div class="fav-heart"></div>
+      <div class="fav-cell">보건복지부</div>
+      <div class="fav-cell">긴급 복지 지원</div>
+      <div class="fav-heart liked"></div>
     </div>
 
     <div class="fav-row">
-        <div class="fav-title-cell"></div>
-        <div class="fav-cell">고용노동부</div>
-        <div class="fav-cell">청년 구직 활동 지원금</div>
-        <div class="fav-heart"></div>
+      <div class="fav-cell">고용노동부</div>
+      <div class="fav-cell">청년 구직 활동 지원금</div>
+      <div class="fav-heart liked"></div>
+    </div>
+
     </div>
     </section>
 
