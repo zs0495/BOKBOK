@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>민간 복지 혜택 모아보기 | bokbok</title>
+    <style>
+        
+        /* 페이지 헤더 (로고 + 햄버거 메뉴) */
+        .welfare-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .welfare-logo img {
+            width: 120px;
+            height: auto;
+        }
+
+        /* 햄버거 버튼 */
+        .menu-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+        }
+        .menu-toggle-btn svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ★ 세로 사이드 메뉴 바 */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 250px; /* 메뉴 너비 */
+            height: 100%;
+            background-color: #f5f9ff;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            transform: translateX(100%); /* 기본적으로 숨김 */
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            padding: 30px;
+            text-align: right;
+        }
+
+        .side-menu.open {
+            transform: translateX(0); /* 열림 상태 */
+        }
+
+        .menu-close-btn {
+            background: none;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .side-menu-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-menu-nav li {
+            margin-bottom: 15px;
+        }
+
+        .side-menu-nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            padding: 8px 0;
+        }
+
+        /* 현재 페이지 색상 적용 */
+        .side-menu-nav a.active-page {
+            color: #79A0DF; /* 복복이 메인 컬러 */
+            font-weight: 700;
+        }
+
+        /* -------------------
+        * 입력 폼 및 결과 페이지 공통 스타일
+        * ------------------- */
+        .welfare-container {
+            max-width: 800px; /* 폭 유지 */
+            margin: 0 auto;
+            padding: 20px;
+            display: none; 
+        }
+        .welfare-container.active {
+            display: block; 
+        }
+
+        .welfare-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        /* 폼 그룹 (레이블을 왼쪽에 배치) */
+        .form-group-welfare {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative; 
+            display: flex; 
+            align-items: center;
+        }
+        
+        /* ★ 입력 필드 컨테이너의 가로 크기를 절반으로 축소 (최대 350px) */
+        .form-group-welfare:not(:last-child) > input[type="text"],
+        .form-group-welfare:not(:last-child) > div.input-group-inline,
+        .form-group-welfare.keyword-select-group > div {
+            max-width: 350px; 
+        }
+        
+        /* ★ 유효성 검사 실패 시 경고 느낌표 색상 변경 효과 (하늘색 테두리) */
+        input:required:invalid:focus,
+        select:required:invalid:focus,
+        textarea:required:invalid:focus {
+             /* 기본 브라우저 아웃라인 제거 */
+            outline: none; 
+            /* 복복이 메인 컬러로 테두리 변경 */
+            border-color: #79A0DF; 
+            box-shadow: 0 0 0 1px #79A0DF;
+        }
+        
+        /* [핵심 수정] JavaScript가 토글할 회색 플레이스홀더 스타일 */
+        .form-group-welfare select.placeholder-color {
+            color: #999 !important; 
+        }
+
+        /* [추가] 실제 옵션은 항상 검은색으로 유지하여 드롭다운 목록에서 잘 보이게 함 */
+        .form-group-welfare select option {
+            color: #333;
+        }
+
+
+        .form-group-welfare label {
+            /* 레이블 스타일 */
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            width: 100px; /* 레이블 너비 고정 */
+            margin-bottom: 0;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .form-group-welfare input[type="text"],
+        .form-group-welfare select,
+        .form-group-welfare textarea {
+            flex-grow: 1; 
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            width: auto; 
+        }
+
+        .form-group-welfare textarea {
+            /* ★ 나의 상황 입력 칸 높이 2배 */
+            min-height: 240px; 
+            padding: 15px;
+            resize: none;
+        }
+
+        /* 인라인 그룹 (생년월일, 주소) */
+        .input-group-inline {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1; 
+        }
+        
+        .birthdate-input-group,
+        .address-input-group {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .birthdate-input-group select {
+            flex-grow: 1;
+            width: 100%;
+        }
+        
+        /* 년/월 텍스트 스타일 */
+        .birthdate-input-group span {
+            margin-left: 5px; 
+            color: #333;
+            font-weight: 500;
+            font-size: 15px;
+            white-space: nowrap; 
+            padding-right: 5px;
+        }
+
+        /* 입력 정보 불러오기 버튼 */
+        .fetch-info-btn {
+            /* ★ 위치 변경: 입력 칸 오른쪽 */
+            position: static; 
+            margin-left: 15px; 
+            background: none;
+            border: none;
+            color: #79A0DF;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 5px 0;
+            flex-shrink: 0; /* 공간 축소 방지 */
+        }
+        
+        /* 매칭하기 버튼 */
+        .welfare-submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 40px;
+            cursor: pointer;
+            transition: background 0.2s;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 매칭 결과 페이지 스타일 */
+        .result-page {
+            text-align: center; 
+            padding-top: 50px;
+            padding-bottom: 80px;
+        }
+        
+        .result-header {
+            /* ★ Flexbox로 변경하여 텍스트와 이미지 분리 */
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            margin-bottom: 30px;
+            text-align: left; 
+            width: 100%; /* 부모 컨테이너 전체 폭 사용 */
+        }
+        
+        .result-text-group {
+            /* ★ 텍스트 그룹이 이미지 옆의 공간을 유연하게 차지하도록 */
+            flex-grow: 1; 
+            max-width: 80%; 
+            margin-right: 20px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: left; 
+        }
+
+        .result-mascot {
+            width: 100px; 
+            height: auto;
+            margin: 0; 
+            flex-shrink: 0; /* ★ 이미지가 줄어들지 않도록 고정 */
+        }
+
+        /* 매칭 성공 시 태그 박스 */
+        .tag-box-group {
+            display: flex;
+            justify-content: flex-start; 
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .result-tag {
+            background-color: #F0F4FA; 
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* 키워드/태그 관련 스타일 */
+        .keyword-select-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box; 
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .selected-keywords-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            text-align: left;
+            min-height: 40px;
+            margin-top: 10px; 
+            margin-bottom: -15px; 
+            max-width: 350px; 
+            /* margin-left: 0; */ /* 제거 */
+        }
+        /* 대신, 상위 div의 flex-grow: 1; 설정을 활용해야 함 */
+
+        .selected-keyword-tag {
+            display: flex;
+            align-items: center;
+            background-color: #79A0DF;
+            color: white;
+            padding: 8px 12px;
+            padding-right: 5px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            user-select: none;
+        }
+
+        .remove-tag-btn {
+            background: none;
+            border: none;
+            color: white;
+            margin-left: 8px;
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 4px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .remove-tag-btn:hover {
+            opacity: 1;
+        }
+        
+        /* 복지 혜택 목록 (이하 스타일은 유지) */
+        .welfare-result-list {
+            list-style: none;
+            padding: 0;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .welfare-result-list li {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f5f5f5;
+            background-color: white;
+            font-size: 15px;
+            position: relative; 
+            flex-wrap: wrap; 
+            transition: background-color 0.2s;
+            cursor: pointer; 
+        }
+        
+        .welfare-result-list li.open {
+            background-color: #f7f9fc;
+        }
+
+        .list-num {
+            font-weight: 700;
+            color: #79A0DF;
+            min-width: 30px;
+            flex-shrink: 0;
+            order: 1; 
+        }
+
+        .list-agency {
+            flex-grow: 0; 
+            text-align: left;
+            color: #666;
+            margin-left: 10px;
+            min-width: 60px;
+            order: 2; 
+        }
+
+        .list-benefit {
+            font-weight: 600;
+            color: #333;
+            flex-grow: 1; 
+            flex-basis: auto; 
+            text-align: left;
+            margin: 0;
+            margin-left: 10px; 
+            order: 3; 
+        }
+        
+        .list-heart-btn {
+            background: none;
+            border: none;
+            color: #111; 
+            font-size: 18px; 
+            cursor: pointer;
+            margin-left: 15px; 
+            flex-shrink: 0;
+            order: 4; 
+            padding: 0;
+        }
+        
+        .list-heart-btn::before {
+            content: "♡";
+        }
+        
+        .list-heart-btn.liked::before {
+            content: "♥";
+            color: #7ca2e0; 
+        }
+        
+        .list-detail-content {
+            width: 100%;
+            display: none; 
+            padding: 15px 0 0;
+            margin-top: 10px;
+            border-top: 1px dashed #eee;
+            color: #333;
+            order: 5; 
+        }
+
+        .welfare-result-list li.open .list-detail-content {
+            display: block;
+        }
+        
+        .detail-documents {
+            padding-left: 0;
+            list-style: none;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-documents li {
+            display: flex; 
+            align-items: center;
+            padding: 5px 0;
+            font-size: 14px;
+            border-bottom: none;
+            background-color: transparent;
+            cursor: default; 
+        }
+        
+        .detail-documents li:before {
+            content: '•';
+            color: #79A0DF;
+            font-weight: 700;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            margin-right: 0.5em;
+        }
+        
+        .document-help {
+            color: #79A0DF;
+            font-size: 12px;
+            margin-left: 8px;
+            cursor: help;
+        }
+        
+        .benefit-link {
+            display: block;
+            text-align: right;
+            font-size: 13px;
+            color: #79A0DF;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .error-msg {
+            font-size: 12px;
+            color: #e74c3c;  /* 빨간색 경고 */
+            margin-top: 4px;
+        }
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header class="welfare-page-header">
+        <div class="welfare-logo">
+            <a href="index.html">
+                <img src="../images/bokbok_logo.png" alt="로고">
+            </a>
+        </div>
+        <button id="menuToggle" class="menu-toggle-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </header>
+    
+    <aside id="sideMenu" class="side-menu">
+        <button id="menuClose" class="menu-close-btn">&times;</button>
+        <nav class="side-menu-nav">
+            <ul>
+                <li><a href="gong.html">공공 복지 혜택 모아보기</a></li>
+                <li><a href="min.html" class="active-page">민간 복지 혜택 모아보기</a></li>
+                <li><a href="index.html">홈으로</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <section id="inputFormPage" class="welfare-container active">
+        <h2 class="welfare-title">민간 복지 혜택 모아보기</h2>
+        
+        <form id="welfareForm" **novalidate**>
+            <div class="form-group-welfare">
+                <label for="userName">이름</label>
+                <div class="input-wrapper">
+                    <input type="text" id="userName" placeholder="복복이" /> 
+                    <div class="error-msg" id="name-error-msg">
+                </div>
+    </div>
+                <button type="button" id="fetchInfoBtn" class="fetch-info-btn">입력 정보 불러오기</button>
+            </div>
+
+            <div class="form-group-welfare">
+                <label>생년월일</label>
+
+                <div class="input-wrapper">
+                    <div class="input-group-inline">
+                        <div class="birthdate-input-group">
+                            <select name="birthYear"><option value="" disabled selected>년</option></select>
+                        </div>
+
+                        <div class="birthdate-input-group">
+                            <select name="birthMonth"><option value="" disabled selected>월</option></select>
+                        </div>
+                    </div>
+
+                    <div class="error-msg" id="birth-error-msg"></div>
+                </div>
+            </div>
+
+
+            <div class="form-group-welfare">
+                <label>주소</label>
+
+                <div class="input-wrapper">
+                    <div class="input-group-inline">
+                        <div class="address-input-group">
+                            <select name="city"><option value="" disabled selected>도/시</option></select>
+                        </div>
+
+                        <div class="address-input-group">
+                            <select name="district"><option value="" disabled selected>시/군/구</option></select>
+                        </div>
+                    </div>
+
+                    <div class="error-msg" id="address-error-msg"></div>
+                </div>
+            </div>
+
+
+            <div class="form-group-welfare keyword-select-group" style="align-items: flex-start;">
+                <label for="keywordSelect" style="padding-top: 12px;">나의 키워드</label>
+                <div style="flex-grow: 1;">
+                    <select id="keywordSelect" name="keywordSelect">
+                        <option value="" disabled selected>키워드 선택 (하나씩 선택)</option>
+                        <option value="국가유공자">국가유공자</option>
+                        <option value="아동">아동</option>
+                        <option value="자영업">자영업</option>
+                        <option value="학생(청소년)">학생(청소년)</option>
+                        <option value="청년">청년</option>
+                        <option value="질병">질병</option>
+                        <option value="한부모가정">한부모가정</option>
+                        <option value="취업">취업</option>
+                        <option value="장학금">장학금</option>
+                        <option value="차상위/저소득">차상위/저소득</option>
+                        <option value="장애인">장애인</option>
+                        <option value="교육">교육</option>
+                        <option value="임산부">임산부</option>
+                        <option value="금융">금융</option>
+                        <option value="노인">노인</option>
+                        <option value="거주">거주</option>
+                        <option value="(신혼)부부">(신혼)부부</option>
+                    </select>
+                    <div id="selectedKeywordsContainer" class="selected-keywords-container" style="margin-left: 0;"> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group-welfare" style="align-items: flex-start;">
+                <label style="padding-top: 12px;">나의 상황</label>
+                <textarea 
+                    placeholder='"이번 달 월세가 너무 부담돼요"와 같은 실직, 주거 부담, 의료비 필요, 교육/양육, 긴급 생계 등 직접적인 키워드가 들어갈수록 정확한 결과가 나와요'
+                ></textarea>
+            </div>
+
+            <button type="button" id="searchButton" class="welfare-submit-btn">매칭하기</button>
+        </form>
+    </section>
+
+    <section id="matchSuccessPage" class="welfare-container result-page">
+        <div class="result-header">
+            <div class="result-text-group"> 
+                <h2 class="result-title">김복복님에게 딱 맞는 공공 복지 혜택이에요</h2>
+                <div class="tag-box-group">
+                    </div>
+            </div>
+            <img src="../images/search_bok.png" alt="매칭 성공 캐릭터" class="result-mascot">
+        </div>
+
+        <div class="result-list-container">
+            <ul class="welfare-result-list">
+                <li data-benefit-id="benefit-1" role="button" aria-expanded="false">
+                    <span class="list-num">01</span>
+                    <span class="list-agency">보건복지부</span>
+                    <button class="list-heart-btn" aria-label="찜하기"></button>
+                    <span class="list-benefit">긴급 복지 지원</span>
+                    <div class="list-detail-content">
+                        <p style="font-size: 14px; margin-bottom: 10px;">"긴급 복지 지원" 혜택 상세 정보:</p>
+                        <ul class="detail-documents">
+                            <li>필수 서류 1 (신분증)</li>
+                            <li>필수 서류 2 (소득 증빙 자료)</li>
+                            <li>필수 서류 3 (재산 보유 현황)</li>
+                            <li>필수 서류 4 (임대차 계약서)</li>
+                            <li>필수 서류 5 (부양의무자 재산가액) <span class="document-help">?</span></li>
+                        </ul>
+                        <a href="https://www.bokjiro.go.kr" target="_blank" class="benefit-link">혜택 바로가기</a>
+                    </div>
+                </li>
+                <li data-benefit-id="benefit-2" role="button" aria-expanded="false">
+                    <span class="list-num">02</span>
+                    <span class="list-agency">서울시</span>
+                    <button class="list-heart-btn" aria-label="찜하기"></button>
+                    <span class="list-benefit">청년 월세 지원</span>
+                     <div class="list-detail-content">
+                        <p style="font-size: 14px; margin-bottom: 10px;">"청년 월세 지원" 혜택 상세 정보:</p>
+                        <ul class="detail-documents">
+                            <li>필수 서류 A (주민등록등본)</li>
+                            <li>필수 서류 B (건강보험자격득실확인서)</li>
+                            <li>필수 서류 C (주택임대차계약서 사본)</li>
+                        </ul>
+                        <a href="https://www.bokjiro.go.kr" target="_blank" class="benefit-link">혜택 바로가기</a>
+                    </div>
+                </li>
+                 <li data-benefit-id="benefit-3" role="button" aria-expanded="false">
+                    <span class="list-num">03</span>
+                    <span class="list-agency">고용노동부</span>
+                    <button class="list-heart-btn" aria-label="찜하기"></button>
+                    <span class="list-benefit">국민취업지원제도</span>
+                     <div class="list-detail-content">
+                        <p style="font-size: 14px; margin-bottom: 10px;">"국민취업지원제도" 혜택 상세 정보:</p>
+                        <ul class="detail-documents">
+                            <li>필수 서류: 취업지원 신청서</li>
+                        </ul>
+                        <a href="https://www.bokjiro.go.kr" target="_blank" class="benefit-link">혜택 바로가기</a>
+                    </div>
+                </li>
+                </ul>
+        </div>
+    </section>
+
+    <section id="matchFailPage" class="welfare-container result-page">
+        <div class="result-header fail-header">
+            <img src="../images/crying_bok.png" alt="매칭 실패 캐릭터" class="result-mascot">
+            <p class="fail-message">앗.. 매칭된 민간 복지가 없어요 🥺</p>
+            <p class="fail-question">공공 복지 모아보기로 갈까요?</p>
+            <button class="fail-action-btn">갈래요!</button>
+            <a href="#" class="fail-cancel-link">안가도 돼요</a>
+        </div>
+    </section>
+    
+    <script>
+    // 지역구 데이터는 최상단에 유지합니다.
+    const districtData = {
+        seoul: ["종로구","중구","용산구","성동구","광진구","동대문구","중랑구","성북구","강북구","도봉구","노원구","은평구","서대문구","마포구","양천구","강서구","구로구","금천구","영등포구","동작구","관악구","서초구","강남구","송파구","강동구"],
+        busan: ["중구","서구","동구","영도구","부산진구","동래구","남구","북구","해운대구","사하구","금정구","강서구","연제구","수영구","사상구","기장군"],
+        daegu: ["중구","동구","서구","남구","북구","수성구","달서구","달성군"],
+        incheon: ["중구","동구","미추홀구","연수구","남동구","부평구","계양구","서구","강화군","옹진군"],
+        gwangju: ["동구","서구","남구","북구","광산구"],
+        daejeon: ["동구","중구","서구","유성구","대덕구"],
+        ulsan: ["중구","남구","동구","북구","울주군"],
+        sejong: ["세종특별자치시"],
+        gyeonggi: ["수원시","성남시","의정부시","안양시","부천시","광명시","평택시","동두천시","안산시","고양시","과천시","구리시","남양주시","오산시","시흥시","군포시","의왕시","하남시","용인시","파주시","이천시","안성시","김포시","화성시","광주시","여주시","양주시","포천시","연천군","가평군","양평군"],
+        chungbuk: ["청주시","충주시","제천시","보은군","옥천군","영동군","증평군","진천군","괴산군","음성군","단양군"],
+        chungnam: ["천안시","공주시","보령시","아산시","서산시","논산시","계룡시","당진시","금산군","부여군","서천군","청양군","홍성군","예산군","태안군"],
+        jeonbuk: ["전주시","군산시","익산시","정읍시","남원시","김제시","완주군","진안군","무주군","장수군","임실군","순창군","고창군","부안군"],
+        jeonnam: ["목포시","여수시","순천시","나주시","광양시","담양군","곡성군","구례군","고흥군","보성군","화순군","장흥군","강진군","해남군","영암군","무안군","함평군","영광군","장성군","완도군","진도군","신안군"],
+        gyeongbuk: ["포항시","경주시","김천시","안동시","구미시","영주시","영천시","상주시","문경시","경산시","의성군","청송군","영양군","영덕군","청도군","고령군","성주군","칠곡군","예천군","봉화군","울진군","울릉군"],
+        gyeongnam: ["창원시","진주시","통영시","사천시","김해시","밀양시","거제시","양산시","의령군","함안군","창녕군","고성군","남해군","하동군","산청군","함양군","거창군","합천군"],
+        jeju: ["제주시","서귀포시"]
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // ==========================================================
+        // 1. DOM 요소 정의
+        // ==========================================================
+        
+        // --- 메뉴 및 페이지 요소 ---
+        const menuToggle = document.getElementById('menuToggle');
+        const menuClose = document.getElementById('menuClose');
+        const sideMenu = document.getElementById('sideMenu');
+        const form = document.getElementById('welfareForm');
+        const inputFormPage = document.getElementById('inputFormPage');
+        const matchSuccessPage = document.getElementById('matchSuccessPage');
+        const matchFailPage = document.getElementById('matchFailPage');
+        const tagBoxGroup = document.querySelector('#matchSuccessPage .tag-box-group');
+        const listItems = document.querySelectorAll('.welfare-result-list li');
+        
+        // --- 폼 입력 및 오류 메시지 요소 (유효성 검사용) ---
+        const userNameInput = document.getElementById('userName');
+        const nameErrorMsg = document.getElementById('name-error-msg'); 
+        
+        // 추가: 입력 정보 불러오기 버튼 
+        const fetchInfoBtn = document.getElementById('fetchInfoBtn');
+
+        const yearSelect = document.querySelector('select[name="birthYear"]');
+        const monthSelect = document.querySelector('select[name="birthMonth"]');
+        const birthErrorMsg = document.getElementById('birth-error-msg');
+        
+        const citySelectBox = document.querySelector('select[name="city"]');
+        const districtSelectBox = document.querySelector('select[name="district"]');
+        const addressErrorMsg = document.getElementById('address-error-msg');
+        
+        const keywordSelect = document.getElementById('keywordSelect');
+        const selectedKeywordsContainer = document.getElementById('selectedKeywordsContainer');
+        const keywordErrorMsg = document.getElementById('keyword-error-msg'); 
+        
+        const submitButton = document.getElementById('searchButton');
+
+        // --- 데이터 상태 ---
+        let selectedKeywords = [];
+
+        // ==========================================================
+        // 2. 유효성 검사 함수 (Validation)
+        // ==========================================================
+        
+        /**
+         * 폼 제출 전 필수 입력 필드의 유효성을 검사하고 오류 메시지를 표시합니다.
+         * @returns {boolean} 유효하면 true, 아니면 false
+         */
+        function validateForm() {
+            let isValid = true;
+            
+            // 모든 오류 메시지 초기화 (숨기기)
+            document.querySelectorAll('.error-msg').forEach(msg => {
+                msg.style.display = 'none';
+            });
+
+            // 1. 이름 검사
+            if (userNameInput.value.trim() === '') {
+                nameErrorMsg.textContent = '이름을 입력해주세요.';
+                nameErrorMsg.style.display = 'block';
+                isValid = false;
+            }
+
+            // 2. 생년월일 검사
+            if (yearSelect.value === '' || monthSelect.value === '') {
+                birthErrorMsg.textContent = '생년월일을 선택해주세요.';
+                birthErrorMsg.style.display = 'block';
+                isValid = false;
+            }
+            
+            // 3. 주소 검사 (시/도, 시/군/구 모두 선택되어야 함)
+            if (citySelectBox.value === '' || districtSelectBox.value === '') {
+                addressErrorMsg.textContent = '주소를 모두 선택해주세요.';
+                addressErrorMsg.style.display = 'block';
+                isValid = false;
+            }
+            return isValid;
+        }
+
+
+        // ==========================================================
+        // 3. 폼 제출 이벤트 (수정된 핵심 로직)
+        // ==========================================================
+        
+        // form의 submit 이벤트 대신 버튼의 click 이벤트를 리스닝합니다.
+        submitButton.addEventListener('click', function(e) { 
+            // e.preventDefault()는 click 이벤트에서는 자동으로 폼 제출을 막아줍니다.
+            
+            // ★ 유효성 검사 실행
+            if (!validateForm()) {
+                console.log("Validation failed. Showing error messages.");
+                // 오류 메시지를 볼 수 있도록 스크롤
+                window.scrollTo(0, 0); 
+                return; // 유효성 검사 실패 시 여기서 함수 종료
+            }
+            
+            // 유효성 검사 성공 시: 페이지 전환 로직 실행
+            inputFormPage.classList.remove('active');
+            matchSuccessPage.classList.remove('active');
+            matchFailPage.classList.remove('active');
+
+            const isMatch = true; // 실제 매칭 로직으로 대체 필요
+
+            if (isMatch) {
+                renderResultTags();
+                matchSuccessPage.classList.add('active');
+                const userName = document.getElementById('userName').value || '김복복';
+                document.querySelector('.result-title').textContent = `${userName}님에게 딱 맞는 공공 복지 혜택이에요`;
+            } else {
+                matchFailPage.classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        });
+
+        // ==========================================================
+        // 5. 입력 정보 불러오기 (백엔드 연동)
+        // ==========================================================
+        
+        /**
+         * 백엔드 API를 호출하여 사용자 정보를 가져와 폼을 채웁니다.
+         * (이 함수는 이후 실제 백엔드 API 엔드포인트와 인증 로직으로 대체되어야 합니다.)
+         */
+        async function fetchUserInfo() {
+            // 버튼 비활성화 (중복 클릭 방지)
+            fetchInfoBtn.disabled = true; 
+            fetchInfoBtn.textContent = '정보 불러오는 중...';
+            
+            // 실제 API 엔드포인트로 변경하세요.
+            const API_ENDPOINT = '/api/v1/user/profile'; 
+
+            try {
+                // 가정: 실제 인증 토큰을 사용하여 요청
+                // const response = await fetch(API_ENDPOINT, {
+                //     headers: { 'Authorization': 'Bearer YOUR_AUTH_TOKEN' }
+                // });
+
+                // **[테스트용 임시 데이터]** 실제 백엔드 연동 전까지 이 데이터를 사용합니다.
+                // 백엔드 연동 시 위의 fetch 코드로 대체하고 아래 setTimeout을 삭제하세요.
+                const fakeResponse = {
+                    success: true,
+                    data: {
+                        name: '김복복', // 이름
+                        birthYear: 1995, // 생년
+                        birthMonth: 10, // 생월
+                        city: 'seoul', // 시/도 (JavaScript의 districtData 키값)
+                        district: '강남구' // 시/군/구
+                    }
+                };
+                
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기 (API 지연 흉내)
+                // if (!response.ok) throw new Error('API 호출 실패');
+                // const result = await response.json();
+                const result = fakeResponse;
+
+
+                if (result.success && result.data) {
+                    fillFormWithUserInfo(result.data);
+                    alert('입력 정보가 성공적으로 불러와졌습니다.');
+                } else {
+                    throw new Error('사용자 정보를 불러올 수 없습니다.');
+                }
+
+            } catch (error) {
+                console.error('정보 불러오기 오류:', error);
+                alert('정보를 불러오는 데 실패했습니다. 직접 입력해주세요.');
+            } finally {
+                // 버튼 다시 활성화 및 텍스트 원복
+                fetchInfoBtn.disabled = false;
+                fetchInfoBtn.textContent = '입력 정보 불러오기';
+            }
+        }
+        
+        /**
+         * 가져온 데이터를 바탕으로 폼 필드를 채우는 함수
+         * @param {object} data - 백엔드에서 받은 사용자 정보 객체
+         */
+        function fillFormWithUserInfo(data) {
+            // 1. 이름 채우기
+            if (data.name) {
+                userNameInput.value = data.name;
+            }
+
+            // 2. 생년월일 채우기
+            if (data.birthYear) {
+                yearSelect.value = data.birthYear;
+                updateSelectColor(yearSelect);
+            }
+            if (data.birthMonth) {
+                monthSelect.value = data.birthMonth;
+                updateSelectColor(monthSelect);
+            }
+            
+            // 3. 주소 채우기 (시/도 > 시/군/구 순서)
+            if (data.city) {
+                citySelectBox.value = data.city;
+                updateSelectColor(citySelectBox);
+                
+                // citySelectBox의 change 이벤트 강제 실행하여 districtSelectBox의 옵션을 채움
+                citySelectBox.dispatchEvent(new Event('change'));
+                
+                // district가 채워졌으면 최종 값 설정
+                if (data.district) {
+                    // 비동기적인 change 이벤트 처리 후 값을 설정하기 위해 약간의 지연이 필요할 수 있으나, 
+                    // 동기적으로 처리되는 change 이벤트에서는 바로 설정해도 됩니다.
+                    districtSelectBox.value = data.district;
+                    updateSelectColor(districtSelectBox);
+                }
+            }
+            
+            // 정보가 채워진 후 유효성 검사 오류 메시지 초기화
+            validateForm(); 
+        }
+
+        // ==========================================================
+        // 6. 이벤트 리스너 연결
+        // ==========================================================
+        
+        // ★ '입력 정보 불러오기' 버튼 이벤트 리스너
+        fetchInfoBtn.addEventListener('click', fetchUserInfo); 
+        
+        // ==========================================================
+        // 4. 기타 함수 및 이벤트 리스너
+        // ==========================================================
+        
+        // --- 4-1. 플레이스홀더 색상 토글 함수 ---
+        function updateSelectColor(selectElement) {
+            if (selectElement.value === "") {
+                selectElement.classList.add('placeholder-color');
+            } else {
+                selectElement.classList.remove('placeholder-color');
+            }
+        }
+        
+        // --- 4-2. 키워드 선택 및 태그 관리 ---
+        function renderKeywords() {
+            selectedKeywordsContainer.innerHTML = '';
+            selectedKeywords.forEach(keyword => {
+                const tag = document.createElement('div');
+                tag.classList.add('selected-keyword-tag');
+                tag.textContent = keyword;
+                tag.dataset.keyword = keyword;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.classList.add('remove-tag-btn');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.addEventListener('click', () => removeKeyword(keyword));
+
+                tag.appendChild(removeBtn);
+                selectedKeywordsContainer.appendChild(tag);
+            });
+            keywordSelect.value = '';
+            // 키워드 선택/제거 시 유효성 검사를 실행하여 오류 메시지를 즉시 숨김
+            validateForm(); 
+        }
+        function removeKeyword(keyword) {
+            selectedKeywords = selectedKeywords.filter(k => k !== keyword);
+            renderKeywords();
+        }
+        keywordSelect.addEventListener('change', function() {
+            const selectedKeyword = this.value;
+            if (selectedKeyword && !selectedKeywords.includes(selectedKeyword)) {
+                selectedKeywords.push(selectedKeyword);
+                renderKeywords();
+            } else if (selectedKeywords.includes(selectedKeyword)) {
+                this.value = '';
+            }
+        });
+
+        // --- 4-3. city → district 연동 ---
+        districtSelectBox.innerHTML = `<option value="" disabled selected>시/군/구</option>`;
+        citySelectBox.addEventListener('change', function() {
+            const cityValue = this.value;
+            districtSelectBox.innerHTML = `<option value="" disabled selected>시/군/구</option>`;
+            if (districtData[cityValue]) {
+                districtData[cityValue].forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelectBox.appendChild(option);
+                });
+            }
+            updateSelectColor(districtSelectBox); // 시/군/구 플레이스홀더 색상 업데이트
+            validateForm(); // 주소 선택 시 유효성 검사 실행 (선택적)
+        });
+        
+        // --- 4-4. 결과 페이지 태그 출력 ---
+        function renderResultTags() {
+            tagBoxGroup.innerHTML = '';
+            const situationTextarea = document.querySelector('.form-group-welfare textarea');
+            const currentTags = [...selectedKeywords];
+
+            // 주소
+            if (districtSelectBox.value) {
+                currentTags.push(districtSelectBox.value);
+            } else if (citySelectBox.value) {
+                currentTags.push(citySelectBox.options[citySelectBox.selectedIndex].text);
+            }
+
+            // 상황
+            const situation = situationTextarea.value.trim();
+            if (situation) {
+                currentTags.push(situation.length > 15 ? situation.substring(0,15)+'...' : situation);
+            }
+
+            if (currentTags.length === 0) {
+                tagBoxGroup.innerHTML = '<span class="result-tag">키워드 정보 없음</span>';
+                return;
+            }
+
+            currentTags.forEach(keyword => {
+                const tag = document.createElement('span');
+                tag.classList.add('result-tag');
+                tag.textContent = keyword;
+                tagBoxGroup.appendChild(tag);
+            });
+        }
+        
+        // --- 4-5. 사이드 메뉴 토글 ---
+        menuToggle.addEventListener('click', () => sideMenu.classList.add('open'));
+        menuClose.addEventListener('click', () => sideMenu.classList.remove('open'));
+        
+        // --- 4-6. 리스트 클릭 & 찜 ---
+        listItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (!e.target.closest('.list-heart-btn')) {
+                    const openItem = document.querySelector('.welfare-result-list li.open');
+                    if (openItem && openItem !== item) {
+                        openItem.classList.remove('open');
+                        openItem.setAttribute('aria-expanded','false');
+                    }
+                    const isExpanded = item.classList.toggle('open');
+                    item.setAttribute('aria-expanded',isExpanded);
+                }
+            });
+            const heartBtn = item.querySelector('.list-heart-btn');
+            if (heartBtn) {
+                heartBtn.addEventListener('click', function(e){
+                    e.stopPropagation();
+                    this.classList.toggle('liked');
+                    if (this.classList.contains('liked')) {
+                        alert('찜 목록에 추가되었습니다.');
+                        this.setAttribute('aria-label','찜하기 취소');
+                    } else {
+                        alert('찜 목록에서 제거되었습니다.');
+                        this.setAttribute('aria-label','찜하기');
+                    }
+                });
+            }
+        });
+
+
+        // ==========================================================
+        // 5. 초기화 (Initialization)
+        // ==========================================================
+        
+        // --- 5-1. 초기 페이지 설정 ---
+        inputFormPage.classList.add('active');
+
+        // --- 5-2. 생년월일 셀렉트 박스 채우기 ---
+        const currentYear = new Date().getFullYear();
+        
+        // 연도 옵션 자동 생성 (최근 → 과거 순)
+        for (let y = currentYear; y >= currentYear - 100; y--) {
+            const option = document.createElement('option');
+            option.value = y;            // 실제 전송되는 값은 숫자 (예: 2025)
+            option.textContent = `${y}년`; // 사용자에게 표시되는 텍스트 (예: 2025년)
+            yearSelect.appendChild(option);
+        }
+
+        // ★ 월 옵션 자동 생성 
+        for (let m = 1; m <= 12; m++) {
+            const option = document.createElement('option');
+            option.value = m;            // 실제 전송되는 값은 숫자 (예: 1)
+            option.textContent = `${m}월`; // 사용자에게 표시되는 텍스트 (예: 1월)
+            monthSelect.appendChild(option);
+        }
+
+        // --- 5-3. 주소 select 초기값 (시/도) ---
+        citySelectBox.innerHTML += `
+            <option value="seoul">서울특별시</option>
+            <option value="busan">부산광역시</option>
+            <option value="daegu">대구광역시</option>
+            <option value="incheon">인천광역시</option>
+            <option value="gwangju">광주광역시</option>
+            <option value="daejeon">대전광역시</option>
+            <option value="ulsan">울산광역시</option>
+            <option value="sejong">세종특별자치시</option>
+            <option value="gyeonggi">경기도</option>
+            <option value="gangwon">강원특별자치도</option>
+            <option value="chungbuk">충청북도</option>
+            <option value="chungnam">충청남도</option>
+            <option value="jeonbuk">전북특별자치도</option>
+            <option value="jeonnam">전라남도</option>
+            <option value="gyeongbuk">경상북도</option>
+            <option value="gyeongnam">경상남도</option>
+            <option value="jeju">제주특별자치도</option>
+        `;
+        
+        // --- 5-4. Select 요소 플레이스홀더 색상 초기화 및 이벤트 연결 ---
+        const allSelects = document.querySelectorAll('.form-group-welfare select');
+
+        allSelects.forEach(select => {
+            updateSelectColor(select);
+            select.addEventListener('change', function() {
+                updateSelectColor(this);
+                validateForm(); // 선택 변경 시 해당 오류 메시지를 즉시 숨김
+            });
+        });
+// 복지 추천 조회 함수
+function sendWelfareRequest() {
+    const data = {
+        username: document.getElementById("username").value,
+        birth_year: document.getElementById("birth_year").value,
+        birth_month: document.getElementById("birth_month").value,
+        city: document.getElementById("city").value,
+        district: document.getElementById("district").value,
+        situation: document.getElementById("situation").value,
+        keywords: [],
+        type: "PUBLIC"
+    };
+
+    fetch("/match_welfare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        const box = document.getElementById("resultBox");
+        if (res.error) {
+            box.innerHTML = "<b>오류:</b> " + res.error;
+            return;
+        }
+        if (!res.matched) {
+            box.innerHTML = "조건에 맞는 복지 혜택이 없습니다.";
+            return;
+        }
+        let html = "<h3>추천된 복지 목록</h3>";
+        res.benefits.forEach(b => {
+            html += `
+                <div style="margin-bottom:15px;">
+                    <b>${b.benefit_title}</b><br>
+                    ${b.description}<br>
+                    <a href="${b.link}" target="_blank">자세히 보기</a>
+                    <br>
+                    <span style="color:#444;font-size:12px;">
+                        ${b.site_name} ${b.is_nationwide ? "(전국)" : ""}
+                        ${b.is_liked ? " ⭐찜됨" : ""}
+                    </span>
+                </div>
+            `;
+        });
+        box.innerHTML = html;
+    })
+    .catch(err => {
+        document.getElementById("resultBox").innerHTML = "서버 오류 발생: " + err;
+    });
+}
+
+// 조회 버튼 클릭 시 위 함수 실행
+document.getElementById('searchButton').addEventListener('click', sendWelfareRequest);
+
+        
+
+      
+    });
+</script>
+</body>
+</html>
