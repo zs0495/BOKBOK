@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bokbok mypage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+
+    /* 1. 뒤로 가기 버튼 및 로고 */
+    .fixed-top-left {
+        position: fixed;
+        top: 25px;
+        left: 25px;
+        z-index: 100;
+    }
+
+    .back-btn {
+        background: none;
+        border: none;
+        font-size: 36px;
+        color: #333;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .login-logo {
+        position: fixed;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 160px;
+        height: auto;
+        z-index: 200; 
+    }
+
+    .mypage-page {
+        margin: 80px 0 40px; 
+        padding: 0 0 40px;
+        box-sizing: border-box;
+    }
+    
+    .mypage-header {
+        background: #f5f9ff; 
+        border: 1px solid #ddd;
+        padding: 30px 0;      
+        text-align: center;
+        border-left: 0;          
+        border-right: 0;
+    }
+
+    .mypage-header h2 {
+        font-size: 26px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .mypage-container {
+        max-width: 960px;
+        margin: 30px auto 30px;
+        padding: 0 24px;
+    }
+
+    /* 2. 개인정보 영역 */
+    .info-box {
+        padding: 16px 30px 0;
+    }
+
+    .info-box .row {
+        display: flex;
+        gap: 80px;
+        margin-bottom: 19px;
+        font-size: 16px;
+    }
+
+    .info-box .label {
+        width: 70px;
+        flex-shrink: 0;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .info-box .value {
+        flex: 1;
+        color: #222222;
+    }
+
+    .info-box .long-text {
+        line-height: 1.5;
+    }
+
+    /* 3. 찜한 복지 섹션 */
+    .fav-list {
+        margin-top: 40px;
+        padding: 0 30px;
+    }
+
+    .fav-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #222;
+    }
+
+    .fav-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .fav-row .inst {
+        width: 150px;
+        flex-shrink: 0;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .fav-row .benefit {
+        flex: 1;
+        color: #222;
+    }
+
+    .fav-row .heart {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b6b'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") no-repeat center;
+        background-size: contain;
+    }
+
+    /* 4. 수정 완료 버튼 */
+    .login-btn {
+        width: 100%;
+        max-width: 400px;
+        padding: 14px;
+        background: #111;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 40px auto 0;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: block;
+    }
+
+    .login-btn:hover {
+        background: #333;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 40px 0;
+    }
+
+    </style>
+</head>
+<body>
+
+    <!-- 로그인 체크 -->
+    {% if not session.get('logged_in') %}
+    <script>
+        alert('로그인이 필요한 서비스입니다.');
+        window.location.href = '{{ url_for("login_form", message="로그인이 필요한 서비스입니다.") }}';
+    </script>
+    {% endif %}
+
+    <div class="top-bar">
+        <a href="{{ url_for('index') }}" class="back-btn fixed-top-left"></a>
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/bokbok_logo.png') }}" alt="로고" class="login-logo">
+        </a>
+    </div>
+    
+    <main class="mypage-page">
+        <section class="mypage-header">
+            <h2>마이페이지</h2>
+        </section>
+
+        <section class="mypage-container">
+            <section class="info-box">
+                <div class="row">
+                    <span class="label">아이디</span>
+                    <span class="value">{{ username or '정보 없음' }}</span>
+                </div>
+
+                <div class="row">
+                    <span class="label">이름</span>
+                    <span class="value">{{ user_info.name or '정보 없음' }}</span>
+                </div>
+
+                <div class="row">
+                    <span class="label">생년월일</span>
+                    <span class="value">
+                        {% if user_info.birth_year and user_info.birth_month %}
+                            {{ user_info.birth_year }}년 {{ user_info.birth_month }}월
+                        {% else %}
+                            정보 없음
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="row">
+                    <span class="label">주소</span>
+                    <span class="value">
+                        {% if user_info.city and user_info.district %}
+                            {{ user_info.city }} {{ user_info.district }}
+                        {% else %}
+                            정보 없음
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="row">
+                    <span class="label">현재 상황</span>
+                    <span class="value long-text">
+                        {{ user_info.situation or '입력된 상황 정보가 없습니다.' }}
+                    </span>
+                </div>
+            </section>
+
+            <hr />
+
+            <section class="fav-list">
+                <div class="fav-title">찜한 복지</div>
+                
+                {% if favorites %}
+                    {% for fav in favorites %}
+                    <div class="fav-row">
+                        <span class="inst">{{ fav.institution }}</span>
+                        <span class="benefit">{{ fav.benefit_name }}</span>
+                        <span class="heart"></span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="fav-row">
+                        <span class="benefit">아직 찜한 복지가 없습니다.</span>
+                    </div>
+                {% endif %}
+            </section>
+
+            <button class="login-btn" onclick="location.href='{{ url_for('edit_profile') }}'">
+                정보 수정하기
+            </button>
+        </section>
+    </main>
+
+    <footer class="footer">
+        © 2025 bokbok. All rights reserved.
+    </footer>
+
+</body>
+</html>
