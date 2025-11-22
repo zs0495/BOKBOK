@@ -199,25 +199,60 @@
         border-radius: 8px;
         box-sizing: border-box; 
         font-size: 15px;
-        color: #555;
+        color: #111;
         transition: border-color 0.2s;
     }
 
     .form-group input:focus,
     .form-group select:focus {
-        border-color: #555; 
+        border-color: #999; 
         outline: none;
     }
 
     input::placeholder {
     color: #bbb;
-}
+    }
 
+    /* 1. <select>의 기본 스타일과 아이콘을 숨깁니다. */
+    /* [필수 수정] <select>에 남아있는 flex 속성 초기화 및 너비 설정 */
+    .form-group select,
+    .keyword-select-group select {
+        /* 1. 기본 UI 숨기기 (기존대로 유지) */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        
+        /* 2. <select>가 래퍼 안에서 100% 너비를 가지도록 강제 설정 */
+        width: 100% !important; /* 강제 적용 */
+        
+        /* 3. flex 관련 속성 제거 */
+        flex-grow: 0 !important; /* 강제 적용 */
+        flex-basis: auto !important; /* 강제 적용 */
+        min-width: 0 !important; /* 강제 적용 */
+        
+        /* position: static은 래퍼에 ::after를 적용하기 위해 유지 */
+        position: static; 
+    }
+
+    /* 2. 커스텀 아이콘을 <select> 뒤에 삽입합니다. */
+    .form-group select::after,
+    .keyword-select-group select::after {
+        content: '▼';
+        position: absolute;
+        top: 50%;
+        right: 10px; 
+        transform: translateY(-50%);
+        color: #999; /* 아이콘 색상 */
+        font-size: 10px; /* 아이콘 크기 */
+        
+        /* 4. <select>가 클릭되어야 하므로 아이콘은 클릭 이벤트를 받지 않도록 합니다. */
+        pointer-events: none; 
+    }
     /* 입력 필드 설명 텍스트 */
     .input-description {
         display: block;
         font-size: 13px;
-        color: #777;
+        color: #555;
         margin-top: 5px;
         font-weight: 400;
         margin-bottom: 5px;
@@ -231,20 +266,22 @@
     }
 
     /* 드롭다운 개별 너비 조정 */
-    .address-group select, .birthdate-group select {
-        flex-grow: 1; 
-        min-width: 0; 
+    .address-group select, 
+    .birthdate-group select {
+        /*flex-grow: 1; 
+        min-width: 0; */
     }
 
     /* 생년월일: 연(Year) 드롭다운 너비를 조금 더 넓게 */
-    .birthdate-group select:first-child {
-        flex-basis: 40%; 
-        flex-grow: 0;
+    .birthdate-group .select-wrapper:first-child {
+        flex-basis: 40% !important; 
+        flex-grow: 0 !important;
     }
-    .birthdate-group select:nth-child(2),
-    .birthdate-group select:nth-child(3) {
-        flex-basis: 30%;
-        flex-grow: 0;
+    /* 생년월일: 월(Month), 일(Day) 드롭다운 너비 */
+    .birthdate-group .select-wrapper:nth-child(2),
+    .birthdate-group .select-wrapper:nth-child(3) {
+        flex-basis: 30% !important;
+        flex-grow: 0 !important;
     }
 
     /* --- 2-2단계 추가 스타일 --- */
@@ -276,12 +313,25 @@
         /* 기존 폼 입력 필드 스타일 재사용 */
         width: 100%;
         padding: 12px 15px;
+        padding-right: 35px;
         border: 1px solid #bbb;
         border-radius: 8px;
         box-sizing: border-box; 
         font-size: 15px;
         color: #bbb;
         transition: border-color 0.2s;
+    }
+
+    /* 아래 스타일 블록은 기본 아이콘을 완전히 제거하고 래퍼가 아이콘을 대신 표시하도록 합니다. */
+    .form-group select,
+    .keyword-select-group select {
+        /* 기본 UI 숨기기 (필수) */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        
+        /* ::after를 select에 직접 적용하려는 기존 시도는 삭제 */
+        position: static; /* position: relative; 삭제 */
     }
 
     /* 드롭다운 기본 선택 옵션(placeholder) 색상 연하게 */
@@ -292,6 +342,32 @@
     /* 드롭다운 선택하면 일반 텍스트 색으로 */
     select {
         color: #333;
+    }
+
+    /* 새로운 래퍼 스타일 (기존 스타일에서 flex 관련 속성 조정) */
+    .select-wrapper {
+        position: relative; 
+        display: flex;      
+        flex-grow: 1;       /* 부모(.address-group, .birthdate-group)에 맞춰 늘어나도록 */
+        min-width: 0;
+    }
+
+    /* 래퍼 안의 SELECT는 100% 너비로 채우고, FLEX 속성은 제거합니다. */
+    .select-wrapper select {
+        width: 100%;
+        /* 기존 select에 있던 flex-grow: 1; min-width: 0; 속성은 여기서 제거 */
+    }
+
+    /* 래퍼에 ::after 의사 요소를 사용해 커스텀 아이콘 삽입 */
+    .select-wrapper::after {
+        content: '▼'; 
+        position: absolute;
+        top: 50%;
+        right: 15px; /* 오른쪽 여백 설정 */
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 12px;
+        pointer-events: none; /* 아이콘 클릭 방지 (뒤의 <select>가 클릭되도록) */
     }
 
     /* 선택된 값의 색 유지 */
@@ -415,7 +491,6 @@
     </style>
 </head>
 <body>
-
     <a href="index.html" class="back-btn fixed-top-left">‹</a>
     <a href="index.html">
         <img src="../images/bokbok_logo.png" alt="로고" class="login-logo">
@@ -485,6 +560,7 @@
                     <label>주소</label>
                     <label class="sub-label">도/시</label>
                     <div class="address-group">
+                        <div class="select-wrapper">
                         <select name="city" required>
                             <option value="">도/시 선택</option>
                             <option value="seoul">서울특별시</option>
@@ -504,13 +580,16 @@
                             <option value="gyeongnam">경상남도</option>
                             <option value="jeju">제주특별자치도</option>
                         </select>
+                        </div>
                     </div>
                     
                     <label class="sub-label" style="margin-top: 15px;">시/군/구</label>
                     <div class="address-group">
+                        <div class="select-wrapper">
                         <select name="district" required>
                             <option value="">시/군/구 선택</option>
                         </select>
+                        </div>
                     </div>
                     <div class="error-msg" id="addressError"></div>
                 </div>
@@ -518,12 +597,16 @@
                 <div class="form-group">
                     <label>생년월일</label>
                     <div class="birthdate-group">
+                        <div class="select-wrapper">
                         <select name="birthYear" required>
                             <option value="">년</option>
                         </select>
+                        </div>
+                        <div class="select-wrapper">
                         <select name="birthMonth" required>
                             <option value="">월</option>
-                            </select>
+                        </select>
+                        </div>
                     </div>
                     <div class="error-msg" id="birthError"></div>
                 </div>
@@ -534,6 +617,7 @@
             <h3 class="section-title-2">나의 키워드</h3>
             
             <div class="form-group keyword-select-group">
+                <div class="select-wrapper">
                 <select id="keywordSelect" name="keywordSelect">
                     <option value="" disabled selected>키워드 선택 (하나씩 선택)</option>
                     <option value="국가유공자">국가유공자</option>
@@ -554,6 +638,7 @@
                     <option value="거주">거주</option>
                     <option value="(신혼)부부">(신혼)부부</option>
                 </select>
+                </div>
             </div>
             
             <div id="selectedKeywordsContainer" class="selected-keywords-container">
