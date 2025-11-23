@@ -77,9 +77,9 @@ def extract_keywords_from_situation(situation_text):
             matched_keys.add(age_label)
     return list(matched_keys)
 
-@app.route('/gong')
+@app.route('/min')
 def gong():
-    return render_template('gong.html')
+    return render_template('min.html')
 
 @app.route('/get_user_info', methods=['GET'])
 def get_user_info():
