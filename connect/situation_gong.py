@@ -10,7 +10,7 @@ def get_db():
     return pymysql.connect(
         host='localhost',
         user='root',
-        password='PASSWORD', # 실제 DB 비밀번호로 변경하세요
+        password='PASSWORD', # 실제 DB 비밀번호로 변경
         db='welfaredb',
         charset='utf8mb4',
         autocommit=True
@@ -93,18 +93,18 @@ def get_user_info():
     db = get_db()
     try:
         cur = db.cursor(pymysql.cursors.DictCursor)
-        # 컬럼 이름 수정: birth_year, birth_month, city_name, district_name 필드를 명시적으로 가져옵니다.
+       
         cur.execute("SELECT username, birth_year, birth_month, city_name, district_name, situation FROM users WHERE user_no = %s", (user_no,))
         user = cur.fetchone()
         if not user:
             return jsonify({'success': False, 'error': 'User not found'}), 404
         
-        # 변수 이름 오류 수정 (username, city, district)
+        
         username = user.get('username')
         birth_year = user.get('birth_year')
         birth_month = user.get('birth_month')
-        city = user.get('city_name') # DB 필드명에 맞게 수정
-        district = user.get('district_name') # DB 필드명에 맞게 수정
+        city = user.get('city_name') 
+        district = user.get('district_name') 
 
         return jsonify({
             'success': True,
@@ -138,8 +138,7 @@ def match_welfare():
         db = get_db()
         cur = db.cursor()
 
-        # 1. 상황 텍스트, 주소, 생년월일 DB 저장 (업데이트)
-        # city_name, district_name 컬럼이 users 테이블에 있다고 가정하고 업데이트
+        # 1. 상황 텍스트, 주소, 생년월일 DB 저장 
         cur.execute("UPDATE users SET situation = %s, city_name = %s, district_name = %s, birth_year = %s, birth_month = %s WHERE user_no = %s", 
                     (situation_text, city, district, birth_year_str, birth_month, user_no))
         db.commit()
@@ -161,14 +160,14 @@ def match_welfare():
         situation_keywords = extract_keywords_from_situation(situation_text)
 
         # 5. 전체 키워드 통합
-        # DB에서 조회할 키워드는 selected_keywords와 age_group_keywords, situation_keywords를 모두 합친 것입니다.
+        # DB에서 조회할 키워드는 selected_keywords와 age_group_keywords, situation_keywords를 모두 합친 것
         all_keywords = list(set(selected_keywords + age_group_keywords + situation_keywords))
 
         # 6. 복지 혜택 조회 쿼리 및 조건
         cur = db.cursor(pymysql.cursors.DictCursor)
         params = []
         
-        # ben_address 테이블의 city_id를 users 테이블의 city_name과 매칭할 수 있도록 쿼리 수정
+        # ben_address 테이블의 city_id를 users 테이블의 city_name과 매칭
         query = """
             SELECT DISTINCT 
                 b.benefit_no,
@@ -191,8 +190,8 @@ def match_welfare():
         
         # 7. 지역 조건 추가
         if city:
-            # c.city_name은 DB의 city 테이블에서 가져온 도시 이름입니다.
-            # is_nationwide가 TRUE이거나 도시 이름이 일치하는 경우를 찾습니다.
+            
+            # is_nationwide가 TRUE이거나 도시 이름이 일치하는 경우
             query += " AND (c.city_name = %s OR b.is_nationwide = TRUE)"
             params.append(city)
 
@@ -207,7 +206,7 @@ def match_welfare():
         cur.execute(query, params)
         results = cur.fetchall()
 
-        # 10. 사용자가 찜한 목록 조회 (favorite_benefit 테이블 가정)
+        # 10. 사용자가 찜한 목록 조회 (favorite_benefit 테이블)
         cur.execute("SELECT benefit_no FROM favorite_benefit WHERE user_no = %s", (user_no,))
         liked = {row['benefit_no'] for row in cur.fetchall()}
 
