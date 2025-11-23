@@ -517,9 +517,9 @@
         <button id="menuClose" class="menu-close-btn">&times;</button>
         <nav class="side-menu-nav">
             <ul>
-                <li><a href="gong.html" class="active-page">공공 복지 혜택 모아보기</a></li>
-                <li><a href="min.html">민간 복지 혜택 모아보기</a></li>
-                <li><a href="index.html">홈으로</a></li>
+                <li><a href="{{url_for('min')}}" class="active-page">민간 복지 혜택 모아보기</a></li>
+                <li><a href="{{url_for('gong')}}">공공 복지 혜택 모아보기</a></li>
+                <li><a href="{{url_for('index')}}">홈으로</a></li>
             </ul>
         </nav>
     </aside>
