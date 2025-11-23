@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 import pymysql
 import re
+import datetime # 현재 연도 계산을 위해 추가
 
 app = Flask(__name__)
 app.secret_key = "SECRET_KEY"
@@ -9,7 +10,7 @@ def get_db():
     return pymysql.connect(
         host='localhost',
         user='root',
-        password='PASSWORD',
+        password='PASSWORD', # 실제 DB 비밀번호로 변경하세요
         db='welfaredb',
         charset='utf8mb4',
         autocommit=True
@@ -44,6 +45,7 @@ SITUATION_KEYWORDS = {
 }
 
 def extract_age_range(text):
+    # 기존 로직 유지
     matches = re.findall(r'(\d{1,2})\s*[\~\-]\s*(\d{1,2})\s*(?:세|살)', text)
     if matches:
         return tuple(int(x) for x in matches[0])
@@ -54,6 +56,7 @@ def extract_age_range(text):
     return None
 
 def get_age_group_label(age):
+    # 기존 로직 유지
     if age is None:
         return None
     for min_age, max_age, label in AGE_RANGES:
@@ -62,6 +65,7 @@ def get_age_group_label(age):
     return None
 
 def extract_keywords_from_situation(situation_text):
+    # 기존 로직 유지
     situation_lower = situation_text.lower()
     matched_keys = set()
     for key, synonyms in SITUATION_KEYWORDS.items():
@@ -69,12 +73,12 @@ def extract_keywords_from_situation(situation_text):
             if word in situation_lower:
                 matched_keys.add(key)
                 break
-    age_range = extract_age_range(situation_text)
-    if age_range:
-        mid_age = (age_range[0] + age_range[1]) // 2
-        age_label = get_age_group_label(mid_age)
-        if age_label:
-            matched_keys.add(age_label)
+        age_range = extract_age_range(situation_text)
+        if age_range:
+            mid_age = (age_range[0] + age_range[1]) // 2
+            age_label = get_age_group_label(mid_age)
+            if age_label:
+                matched_keys.add(age_label)
     return list(matched_keys)
 
 @app.route('/gong')
@@ -89,19 +93,27 @@ def get_user_info():
     db = get_db()
     try:
         cur = db.cursor(pymysql.cursors.DictCursor)
+        # 컬럼 이름 수정: birth_year, birth_month, city_name, district_name 필드를 명시적으로 가져옵니다.
         cur.execute("SELECT username, birth_year, birth_month, city_name, district_name, situation FROM users WHERE user_no = %s", (user_no,))
         user = cur.fetchone()
         if not user:
-            return jsonify({'success': False}), 404
-        birth_year, birth_month, city, district = None, None, '', ''
+            return jsonify({'success': False, 'error': 'User not found'}), 404
+        
+        # 변수 이름 오류 수정 (username, city, district)
+        username = user.get('username')
+        birth_year = user.get('birth_year')
+        birth_month = user.get('birth_month')
+        city = user.get('city_name') # DB 필드명에 맞게 수정
+        district = user.get('district_name') # DB 필드명에 맞게 수정
+
         return jsonify({
             'success': True,
-            'username': username,
-            'birth_year': birth_year,
-            'birth_month': birth_month,
-            'city': city,
-            'district': district,
-            'situation': user['situation'] or ''
+            'username': username or '',
+            'birth_year': birth_year, # 정수형이든 문자열이든 그대로 전달
+            'birth_month': birth_month, # 정수형이든 문자열이든 그대로 전달
+            'city': city or '',
+            'district': district or '',
+            'situation': user.get('situation') or ''
         })
     finally:
         db.close()
@@ -115,42 +127,48 @@ def match_welfare():
         data = request.get_json()
         user_no = session['user_no']
         username = data.get('username', '')
-        birth_year = data.get('birth_year', '')
+        birth_year_str = data.get('birth_year', '')
         birth_month = data.get('birth_month', '')
         city = data.get('city', '')
         district = data.get('district', '')
         selected_keywords = data.get('keywords', [])
-        situation_text = data.get('situation', '')  # 사용자 입력 상황
+        situation_text = data.get('situation', '')
         welfare_type = data.get('type', 'PUBLIC')
 
         db = get_db()
         cur = db.cursor()
 
-        # 상황 텍스트 DB 저장 (업데이트)
-        cur.execute("UPDATE users SET situation = %s WHERE user_no = %s", (situation_text, user_no))
+        # 1. 상황 텍스트, 주소, 생년월일 DB 저장 (업데이트)
+        # city_name, district_name 컬럼이 users 테이블에 있다고 가정하고 업데이트
+        cur.execute("UPDATE users SET situation = %s, city_name = %s, district_name = %s, birth_year = %s, birth_month = %s WHERE user_no = %s", 
+                    (situation_text, city, district, birth_year_str, birth_month, user_no))
         db.commit()
 
-        # 나이 계산
+        # 2. 나이 계산
         age = None
-        if birth_year:
-            age = 2025 - int(birth_year)
+        current_year = datetime.datetime.now().year
+        if birth_year_str and birth_year_str.isdigit():
+            age = current_year - int(birth_year_str)
 
-        # 나이 그룹 키워드
+        # 3. 나이 그룹 키워드
         age_group_keywords = []
         if age:
             label = get_age_group_label(age)
             if label:
                 age_group_keywords.append(label)
 
-        # 상황으로부터 대표 키워드 추출
+        # 4. 상황으로부터 대표 키워드 추출
         situation_keywords = extract_keywords_from_situation(situation_text)
 
-        # 전체 키워드 통합
+        # 5. 전체 키워드 통합
+        # DB에서 조회할 키워드는 selected_keywords와 age_group_keywords, situation_keywords를 모두 합친 것입니다.
         all_keywords = list(set(selected_keywords + age_group_keywords + situation_keywords))
 
-        # 복지 혜택 조회 쿼리 및 조건
+        # 6. 복지 혜택 조회 쿼리 및 조건
         cur = db.cursor(pymysql.cursors.DictCursor)
         params = []
+        
+        # ben_address 테이블의 city_id를 users 테이블의 city_name과 매칭할 수 있도록 쿼리 수정
         query = """
             SELECT DISTINCT 
                 b.benefit_no,
@@ -168,41 +186,48 @@ def match_welfare():
             LEFT JOIN city c ON ba.city_id = c.city_id
             LEFT JOIN ben_keyword bk ON b.benefit_no = bk.benefit_no
             LEFT JOIN keyword k ON bk.keyword_id = k.keyword_id
-            WHERE b.site_id BETWEEN 1 AND 7
+            WHERE b.site_id BETWEEN 1 AND 7 AND b.is_public = TRUE
         """
+        
+        # 7. 지역 조건 추가
         if city:
+            # c.city_name은 DB의 city 테이블에서 가져온 도시 이름입니다.
+            # is_nationwide가 TRUE이거나 도시 이름이 일치하는 경우를 찾습니다.
             query += " AND (c.city_name = %s OR b.is_nationwide = TRUE)"
             params.append(city)
 
+        # 8. 키워드 조건 추가
         if all_keywords:
             placeholders = ','.join(['%s'] * len(all_keywords))
             query += f" AND k.keyword_content IN ({placeholders})"
             params.extend(all_keywords)
-            query += " ORDER BY b.benefit_no LIMIT 20"
-            cur.execute(query, params)
-            results = cur.fetchall()
+        
+        # 9. 쿼리 실행 및 결과 처리
+        query += " ORDER BY b.benefit_no LIMIT 20"
+        cur.execute(query, params)
+        results = cur.fetchall()
 
-        # 사용자가 찜한 목록 조회
-            cur.execute("SELECT benefit_no FROM favorite_benefit WHERE user_no = %s", (user_no,))
-            liked = {row['benefit_no'] for row in cur.fetchall()}
+        # 10. 사용자가 찜한 목록 조회 (favorite_benefit 테이블 가정)
+        cur.execute("SELECT benefit_no FROM favorite_benefit WHERE user_no = %s", (user_no,))
+        liked = {row['benefit_no'] for row in cur.fetchall()}
 
-            matched = []
-            for row in results:
-                matched.append({
+        matched = []
+        for row in results:
+            matched.append({
                 'benefit_no': row['benefit_no'],
                 'site_name': row['site_name'],
                 'benefit_title': row['benefit_title'],
                 'description': row['description'],
                 'eligibility': row['eligibility'],
                 'appl_method': row['appl_method'],
-                'required_documents': row['required_doc'].split(',') if row['required_doc'] else [],
+                # required_doc이 NULL이거나 빈 문자열일 경우 [] 반환
+                'required_documents': row['required_doc'].split(',') if row['required_doc'] else [], 
                 'link': row['ben_url'],
                 'is_nationwide': row['is_nationwide'],
                 'is_liked': row['benefit_no'] in liked
             })
 
-            db.close()
-            return jsonify({
+        return jsonify({
             'success': True,
             'matched': len(matched) > 0,
             'welfare_type': welfare_type,
@@ -218,10 +243,9 @@ def match_welfare():
             }
         })
 
-            except Exception as e:
-                print("Error:", e)
-                return jsonify({'error': '서버 내부 오류가 발생했습니다.'}), 500
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({'success': False, 'error': '서버 내부 오류가 발생했습니다.'}), 500
 
-
-    if __name__ == '__main__':
-        app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
