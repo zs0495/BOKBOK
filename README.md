@@ -20,14 +20,6 @@ Team 복복핑
 
 <br>
 
-### 📱구동화면
-|**`회원가입`**|**`메인`**|**`공공복지혜택 모아보기`**|**`민간복지혜택 모아보기`**|**`마이페이지`**|
-|-------|-------|-------|-------|-------|
-|<img src="https://github.com/Good-MoGong/SYM/assets/127810279/97c14999-478b-48ae-9eba-fc26d83f2ea0" width="143" height="300">|<img src="https://github.com/Good-MoGong/SYM/assets/127810279/8b53b435-746c-46a9-b090-de8195408cbd" width="143" height="300">|<img src="https://github.com/Good-MoGong/SYM/assets/127810279/676177e4-dfb3-4116-9a23-74a82b71cdd3" width="143" height="300">| <img src="https://github.com/Good-MoGong/SYM/assets/127810279/7383236d-c2bd-48e4-bd59-719975a8d250" width="143" height="300">|<img src = "https://github.com/Good-MoGong/SYM/assets/127810279/f3e7262f-1180-48f5-9c0d-e018a367b287" width="143" height="300" >|
-
-<br>
-
-
 ### 🛠️ 개발 환경, 도구 및 활용한 기술
 
 ```
